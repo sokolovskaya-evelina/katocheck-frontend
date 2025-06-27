@@ -36,9 +36,6 @@ export default [
       "no-unused-vars": "warn",
       "no-console": "warn",
 
-      "tailwindcss/classnames-order": "warn",
-      "tailwindcss/no-custom-classname": "off",
-
       "import/order": [
         "warn",
         {
