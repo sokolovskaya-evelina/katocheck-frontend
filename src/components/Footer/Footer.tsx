@@ -8,7 +8,7 @@ export function Footer() {
       <div className="max-w-screen-xl mx-auto px-6 pt-10 pb-5 flex flex-col md:flex-row justify-between gap-6 text-sm text-slate-800">
         <Logo />
         <div className="flex gap-4 items-center">
-          <NavLink href="/" className={"text-muted-foreground"}>
+          <NavLink href="/" className="text-muted-foreground">
             Расписание
           </NavLink>
           <NavLink href="/rinks">Катки</NavLink>
