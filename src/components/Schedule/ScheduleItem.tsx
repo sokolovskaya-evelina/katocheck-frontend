@@ -5,11 +5,11 @@ import Link from "next/link"
 import { MetroStations } from "@/components/MetroStation/MetroStations"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { ScheduleType } from "@/types/types"
+import { ScheduleItemType, ScheduleType } from "@/types/types"
 import dayjs from "@/lib/dayjs"
 
 type Props = {
-  data: ScheduleType
+  data: ScheduleType<ScheduleItemType>
 }
 
 const ScheduleItem = ({ data }: Props) => {

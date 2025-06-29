@@ -1,6 +1,6 @@
-import { ScheduleType } from "@/types/types"
+import { Rink, ScheduleItemType, ScheduleType } from "@/types/types"
 
-export const mockSchedule: ScheduleType[] = [
+export const mockSchedule: ScheduleType<ScheduleItemType>[] = [
   {
     date: "2025-06-28T09:00:00",
     items: [
@@ -415,3 +415,198 @@ export const mockSchedule: ScheduleType[] = [
     ],
   },
 ]
+
+export const mockRink: Rink = {
+  rinkId: "e89ae6a4-09c7-4298-985b-efc148a99d4b",
+  name: "Каток Озерки",
+  address: "ул. Есенина, д. 1",
+  metro: [
+    {
+      name: "Озерки",
+      id: 1,
+    },
+  ],
+  district: "Выборгский район",
+  phones: ["+7 (812) 123-45-67"],
+  socials: [
+    {
+      name: "vk",
+      url: "https://vk.com/ozerski",
+    },
+    {
+      name: "telegram",
+      url: "https://t.me/ozerski",
+    },
+  ],
+  location: [60.037, 30.331],
+  isFavorite: true,
+  schedule: [
+    {
+      date: "2025-06-29",
+      items: [
+        {
+          startTime: "2025-06-29T15:00:00",
+          endTime: "2025-06-29T16:30:00",
+          arena: "Основная арена",
+          sessionType: "Свободное катание",
+        },
+        {
+          startTime: "2025-06-29T08:00:00",
+          endTime: "2025-06-29T09:30:00",
+          arena: "Основная арена",
+          sessionType: "Учебный сеанс",
+        },
+        {
+          startTime: "2025-06-29T13:00:00",
+          endTime: "2025-06-29T14:00:00",
+          arena: "Основная арена",
+          sessionType: "Массовое катание",
+        },
+        {
+          startTime: "2025-06-29T13:00:00",
+          endTime: "2025-06-29T14:00:00",
+          arena: "Основная арена",
+          sessionType: "Хоккейный час",
+        },
+      ],
+    },
+    {
+      date: "2025-06-30",
+      items: [
+        {
+          startTime: "2025-06-30T12:00:00",
+          endTime: "2025-06-30T13:30:00",
+          arena: "Основная арена",
+          sessionType: "Учебный сеанс",
+        },
+        {
+          startTime: "2025-06-30T13:00:00",
+          endTime: "2025-06-30T14:00:00",
+          arena: "Основная арена",
+          sessionType: "Фигурное катание",
+        },
+        {
+          startTime: "2025-06-30T11:00:00",
+          endTime: "2025-06-30T13:00:00",
+          arena: "Основная арена",
+          sessionType: "Свободное катание",
+        },
+        {
+          startTime: "2025-06-30T18:00:00",
+          endTime: "2025-06-30T20:00:00",
+          arena: "Основная арена",
+          sessionType: "Массовое катание",
+        },
+      ],
+    },
+    {
+      date: "2025-07-01",
+      items: [
+        {
+          startTime: "2025-07-01T12:00:00",
+          endTime: "2025-07-01T14:00:00",
+          arena: "Основная арена",
+          sessionType: "Массовое катание",
+        },
+        {
+          startTime: "2025-07-01T14:00:00",
+          endTime: "2025-07-01T15:00:00",
+          arena: "Основная арена",
+          sessionType: "Фигурное катание",
+        },
+      ],
+    },
+    {
+      date: "2025-07-02",
+      items: [
+        {
+          startTime: "2025-07-02T11:00:00",
+          endTime: "2025-07-02T12:30:00",
+          arena: "Основная арена",
+          sessionType: "Фигурное катание",
+        },
+        {
+          startTime: "2025-07-02T20:00:00",
+          endTime: "2025-07-02T22:00:00",
+          arena: "Основная арена",
+          sessionType: "Свободное катание",
+        },
+        {
+          startTime: "2025-07-02T09:00:00",
+          endTime: "2025-07-02T10:00:00",
+          arena: "Основная арена",
+          sessionType: "Учебный сеанс",
+        },
+      ],
+    },
+    {
+      date: "2025-07-03",
+      items: [
+        {
+          startTime: "2025-07-03T13:00:00",
+          endTime: "2025-07-03T15:00:00",
+          arena: "Основная арена",
+          sessionType: "Учебный сеанс",
+        },
+        {
+          startTime: "2025-07-03T11:00:00",
+          endTime: "2025-07-03T13:00:00",
+          arena: "Основная арена",
+          sessionType: "Фигурное катание",
+        },
+      ],
+    },
+    {
+      date: "2025-07-04",
+      items: [
+        {
+          startTime: "2025-07-04T18:00:00",
+          endTime: "2025-07-04T19:30:00",
+          arena: "Основная арена",
+          sessionType: "Свободное катание",
+        },
+        {
+          startTime: "2025-07-04T20:00:00",
+          endTime: "2025-07-04T21:30:00",
+          arena: "Основная арена",
+          sessionType: "Хоккейный час",
+        },
+        {
+          startTime: "2025-07-04T08:00:00",
+          endTime: "2025-07-04T10:00:00",
+          arena: "Основная арена",
+          sessionType: "Массовое катание",
+        },
+      ],
+    },
+    {
+      date: "2025-07-05",
+      items: [
+        {
+          startTime: "2025-07-05T12:00:00",
+          endTime: "2025-07-05T13:30:00",
+          arena: "Основная арена",
+          sessionType: "Учебный сеанс",
+        },
+        {
+          startTime: "2025-07-05T14:00:00",
+          endTime: "2025-07-05T15:00:00",
+          arena: "Основная арена",
+          sessionType: "Хоккейный час",
+        },
+        {
+          startTime: "2025-07-05T14:00:00",
+          endTime: "2025-07-05T15:30:00",
+          arena: "Основная арена",
+          sessionType: "Учебный сеанс",
+        },
+        {
+          startTime: "2025-07-05T17:00:00",
+          endTime: "2025-07-05T19:00:00",
+          arena: "Основная арена",
+          sessionType: "Свободное катание",
+        },
+      ],
+    },
+  ],
+}
