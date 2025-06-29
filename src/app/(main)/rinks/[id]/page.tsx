@@ -1,8 +1,8 @@
 import { Card } from "@/components/ui/card"
-import Map from "@/app/(main)/rinks/components/Map/Map"
-import IceRinkFullInfo from "@/app/(main)/rinks/components/IceRinkFullInfo/IceRinkFullInfo"
+import Map from "../components/Map/Map"
+import IceRinkFullInfo from "@/components/IceRinkShortInfo/IceRinkShortInfo"
 import { mockRink } from "@/mocks/mockData"
-import { RinkScheduleAccordion } from "@/app/(main)/rinks/components/RinkScheduleAccordion/RinkScheduleAccordion"
+import { RinkScheduleAccordion } from "./../components/RinkScheduleAccordion/RinkScheduleAccordion"
 
 export default function Page() {
   return (

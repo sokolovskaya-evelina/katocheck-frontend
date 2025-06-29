@@ -1,4 +1,4 @@
-import IceRinkShortInfo from "./components/IceRinkShortInfo/IceRinkShortInfo"
+import IceRinkShortInfo from "@/components/IceRinkShortInfo/IceRinkShortInfo"
 import { mockRinks } from "@/mocks/mockData"
 
 export default function Page() {
