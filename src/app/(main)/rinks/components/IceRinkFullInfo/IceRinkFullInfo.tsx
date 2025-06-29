@@ -5,7 +5,7 @@ import { MapPin, Phone, Train, Map } from "lucide-react"
 import { Heart } from "lucide-react"
 import { FaVk, FaTelegramPlane, FaInstagram, FaFacebook, FaGlobe } from "react-icons/fa"
 import { MetroStations } from "@/components/MetroStation/MetroStations"
-import { Rink } from "@/types/types"
+import { RinkType } from "@/types/types"
 
 const getSocialIcon = (name: string) => {
   switch (name.toLowerCase()) {
@@ -23,7 +23,7 @@ const getSocialIcon = (name: string) => {
   }
 }
 
-type Props = { rink: Rink }
+type Props = { rink: RinkType }
 
 export default function IceRinkFullInfo({ rink }: Props) {
   return (

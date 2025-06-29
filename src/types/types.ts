@@ -24,7 +24,7 @@ export type ScheduleType<T> = {
   items: T[]
 }
 
-export type Rink = {
+export type RinkType = {
   rinkId: string
   name: string
   imageUrl?: string
@@ -37,3 +37,8 @@ export type Rink = {
   isFavorite: boolean
   schedule: ScheduleType<ScheduleItemShortType>[]
 }
+
+export type RinkShortInfoType = Pick<
+  RinkType,
+  "rinkId" | "name" | "isFavorite" | "address" | "metro" | "district" | "schedule"
+>
