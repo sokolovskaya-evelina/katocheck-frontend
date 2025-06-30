@@ -12,11 +12,12 @@ export type ScheduleItemType = {
   endTime: string
   sessionType: string
   arena?: string
+  note?: string
 }
 
 export type ScheduleItemShortType = Pick<
   ScheduleItemType,
-  "startTime" | "endTime" | "arena" | "sessionType"
+  "startTime" | "endTime" | "arena" | "sessionType" | "note"
 >
 
 export type ScheduleType<T> = {

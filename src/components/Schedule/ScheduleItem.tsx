@@ -21,9 +21,7 @@ const ScheduleItem = ({ data }: Props) => {
       <AccordionTrigger className="text-left text-base font-medium">
         <div className="flex items-center gap-2">
           <CalendarIcon className="w-4 h-4 text-muted-foreground" />
-          <span className="capitalize">
-            {dayjs(data.date).format("dddd")} {dayjs(data.date).format("(DD.MM)")}
-          </span>
+          <span className="capitalize">{dayjs(data.date).format("dddd (DD.MM)")}</span>
         </div>
       </AccordionTrigger>
       <AccordionContent className="space-y-3 pt-2">
