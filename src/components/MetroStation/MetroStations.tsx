@@ -1,14 +1,14 @@
 import { MetroStation } from "./MetroStation"
-import { MetroStationType } from "@/types/types"
+import { MetroStationEnum } from "@/types/enums"
 
-export function MetroStations({ metroStations = [] }: { metroStations: MetroStationType[] }) {
+export function MetroStations({ metroStations = [] }: { metroStations: MetroStationEnum[] }) {
   return (
     metroStations.length > 0 && (
       <div className="flex flex-wrap gap-1 mt-2">
         {metroStations.map((station, index) => (
-          <div key={station.id} className="flex">
+          <div key={index} className="flex">
             <div className="flex items-baseline gap-1">
-              <MetroStation name={station.name} />
+              <MetroStation name={station} />
             </div>
             {index < metroStations.length - 1 && ","}
           </div>

@@ -51,10 +51,10 @@ export default function IceRinkFullInfo({ rink }: Props) {
             </div>
           )}
 
-          {rink.metro?.length > 0 && (
+          {rink.metroStations?.length > 0 && (
             <div className="flex items-center gap-2 text-muted-foreground flex-wrap">
               <Train className="w-4 h-4" />
-              <MetroStations metroStations={rink.metro} />
+              <MetroStations metroStations={rink.metroStations} />
             </div>
           )}
 

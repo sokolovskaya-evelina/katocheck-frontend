@@ -1,12 +1,9 @@
-export type MetroStationType = {
-  id: number
-  name: string
-}
+import { DistrictEnum, MetroStationEnum } from "@/types/enums"
 
 export type ScheduleItemType = {
   rinkId: string
   title: string
-  metroStations: MetroStationType[]
+  metroStations: MetroStationEnum[]
   favorite: boolean
   startTime: string
   endTime: string
@@ -30,8 +27,8 @@ export type RinkType = {
   name: string
   imageUrl?: string
   address: string
-  metro: MetroStationType[]
-  district?: string
+  metroStations: MetroStationEnum[]
+  district?: DistrictEnum
   phones: string[]
   socials: { name: string; url: string }[]
   location: [number, number]
@@ -41,5 +38,5 @@ export type RinkType = {
 
 export type RinkShortInfoType = Pick<
   RinkType,
-  "rinkId" | "name" | "isFavorite" | "address" | "metro" | "district" | "schedule"
+  "rinkId" | "name" | "isFavorite" | "address" | "metroStations" | "district" | "schedule"
 >

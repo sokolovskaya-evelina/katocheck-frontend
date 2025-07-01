@@ -26,7 +26,11 @@ export default function IceRinkShortInfo({ rink }: { rink: RinkShortInfoType }) 
             <MapPin className="w-4 h-4" />
             {rink.address}
           </p>
-          {rink.metro.length > 0 ? <MetroStations metroStations={rink.metro} /> : rink.district}
+          {rink.metroStations.length > 0 ? (
+            <MetroStations metroStations={rink.metroStations} />
+          ) : (
+            rink.district
+          )}
         </CardDescription>
       </CardHeader>
       <CardContent className="flex gap-2 justify-end">
