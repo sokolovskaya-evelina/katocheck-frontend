@@ -6,7 +6,7 @@ import { useMemo, useState } from "react"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import Map from "@/app/(main)/rinks/components/Map/Map"
-import { DistrictEnum, MetroStationEnum } from "@/types/enums"
+import { DistrictEnum } from "@/types/enums"
 import {
   Select,
   SelectContent,
@@ -15,28 +15,10 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Controller, useForm } from "react-hook-form"
-import MultiSelect, {
-  MultiSelectGroup,
-  MultiSelectOption,
-} from "@/components/MultiSelect/MultiSelect"
+import MultiSelect, { MultiSelectOption } from "@/components/MultiSelect/MultiSelect"
 import { Badge } from "@/components/ui/badge"
+import { getMetroStationOptions } from "@/lib/utils"
 
-const groups: MultiSelectGroup[] = [
-  {
-    label: "Фрукты",
-    options: [
-      { value: "apple", label: <span className="text-red-500">🍎 Яблоко</span> },
-      { value: "banana", label: <span className="text-yellow-500">🍌 Банан</span> },
-    ],
-  },
-  {
-    label: "Ягоды",
-    options: [
-      { value: "strawberry", label: "🍓 Клубника" },
-      { value: "blueberry", label: "🫐 Черника" },
-    ],
-  },
-]
 export default function Info() {
   const [mode, setMode] = useState<"view" | "edit">("edit")
   const [socials, setSocials] = useState([{ name: "", url: "" }])
@@ -56,10 +38,6 @@ export default function Info() {
 
   const districtOptions = useMemo(() => {
     return Object.values(DistrictEnum).map(district => ({ label: district, value: district }))
-  }, [])
-
-  const metroOptions = useMemo(() => {
-    return Object.values(MetroStationEnum).map(station => ({ label: station, value: station }))
   }, [])
 
   const addSocial = () => {
@@ -95,7 +73,7 @@ export default function Info() {
             <div className="lg:w-1/2 space-y-6">
               {/* Общая информация */}
               <div className="grid xs:grid-cols-1 lg:grid-cols-2 gap-4">
-                <div>
+                <div className="flex flex-col gap-2">
                   <Label>Название катка</Label>
                   <Controller
                     name="name"
@@ -103,7 +81,7 @@ export default function Info() {
                     render={({ field }) => <Input {...field} />}
                   />
                 </div>
-                <div>
+                <div className="flex flex-col gap-2">
                   <Label>Адрес</Label>
                   <Controller
                     name="address"
@@ -111,7 +89,7 @@ export default function Info() {
                     render={({ field }) => <Input {...field} />}
                   />
                 </div>
-                <div>
+                <div className="flex flex-col gap-2">
                   <Label>Район</Label>
                   <Controller
                     name="district"
@@ -132,13 +110,13 @@ export default function Info() {
                     )}
                   />
                 </div>
-                <div>
+                <div className="flex flex-col gap-2">
                   <Label>Станции метро</Label>
                   <MultiSelect
-                    groups={groups}
+                    groups={getMetroStationOptions()}
                     value={selected}
                     onChange={setSelected}
-                    maxTagsCount={1}
+                    maxTagsCount={2}
                     renderTag={(option: MultiSelectOption, remove) => (
                       <Badge
                         key={option.value}
@@ -155,7 +133,7 @@ export default function Info() {
 
               {/* Контакты и соцсети */}
               <div className="grid xs:grid-cols-1 lg:grid-cols-2 gap-4">
-                <div>
+                <div className="flex flex-col gap-2">
                   <Label>Номера телефонов</Label>
                   <Controller
                     name="phones"
@@ -179,7 +157,7 @@ export default function Info() {
 
               {/* Арены и сеансы */}
               <div className="grid xs:grid-cols-1 lg:grid-cols-2 gap-4">
-                <div>
+                <div className="flex flex-col gap-2">
                   <Label>Арены</Label>
                   <Controller
                     name="arenas"
@@ -187,7 +165,7 @@ export default function Info() {
                     render={({ field }) => <Input {...field} />}
                   />
                 </div>
-                <div>
+                <div className="flex flex-col gap-2">
                   <Label>Типы сеансов</Label>
                   <Controller
                     name="sessionTypes"
@@ -199,7 +177,6 @@ export default function Info() {
             </div>
 
             <div className="w-full lg:w-1/2">
-              <Label>Координаты на карте</Label>
               <Map location={[60.036484, 30.306125]} />
             </div>
           </form>

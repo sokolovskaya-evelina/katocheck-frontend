@@ -1,6 +1,8 @@
 import { MetroStationEnum } from "@/types/enums"
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
+import { MultiSelectGroup } from "@/components/MultiSelect/MultiSelect"
+import { MetroStation } from "@/components/MetroStation/MetroStation"
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -99,4 +101,100 @@ export function getMetroStationColor(station: MetroStationEnum): string {
     default:
       return "bg-muted-foreground"
   }
+}
+
+export function getMetroStationOptions(): MultiSelectGroup[] {
+  const groupMap: Record<string, MetroStationEnum[]> = {
+    "Кировско-Выборгская": [
+      MetroStationEnum.DEVYATKINO,
+      MetroStationEnum.GRAZHDANSKIY_PROSPEKT,
+      MetroStationEnum.AKADEMICHSKAYA,
+      MetroStationEnum.POLITEKHNICHESKAYA,
+      MetroStationEnum.PLOSHCHAD_MUZHESTVA,
+      MetroStationEnum.LESNAYA,
+      MetroStationEnum.VYBORGSKAYA,
+      MetroStationEnum.PLOSHCHAD_LENINA,
+      MetroStationEnum.CHERNYSHEVSKAYA,
+      MetroStationEnum.PLOSHCHAD_VOSSTANIYA,
+      MetroStationEnum.VLADIMIRSKAYA,
+      MetroStationEnum.PUSHKINSKAYA,
+      MetroStationEnum.TEKHNOLOGICHESKIY_INSTITUT_1,
+      MetroStationEnum.BALTIYSKAYA,
+      MetroStationEnum.NARVSKAYA,
+      MetroStationEnum.KIROVSKIY_ZAVOD,
+      MetroStationEnum.AVTOVO,
+      MetroStationEnum.LENINSKIY_PROSPEKT,
+      MetroStationEnum.PROSPEKT_VETERANOV,
+    ],
+    "Московско-Петроградская": [
+      MetroStationEnum.PARNAS,
+      MetroStationEnum.PROSPEKT_PROSVESHCHENIYA,
+      MetroStationEnum.OZERKI,
+      MetroStationEnum.UDELNAYA,
+      MetroStationEnum.PIONERSKAYA,
+      MetroStationEnum.CHYORNAYA_RECHKA,
+      MetroStationEnum.PETROGRADSKAYA,
+      MetroStationEnum.GORKOVSKAYA,
+      MetroStationEnum.NEVSKIY_PROSPEKT,
+      MetroStationEnum.SENNAYA_PLOSHCHAD,
+      MetroStationEnum.TEKHNOLOGICHESKIY_INSTITUT_2,
+      MetroStationEnum.FRUNZENSKAYA,
+      MetroStationEnum.MOSKOVSKIE_VOROTA,
+      MetroStationEnum.ELEKTROSILA,
+      MetroStationEnum.PARK_POBEDY,
+      MetroStationEnum.MOSKOVSKAYA,
+      MetroStationEnum.ZVEZDNAYA,
+      MetroStationEnum.KUPCHINO,
+    ],
+    "Невско-Василеостровская": [
+      MetroStationEnum.BEGOVAYA,
+      MetroStationEnum.ZENIT,
+      MetroStationEnum.PRIMORSKAYA,
+      MetroStationEnum.VASILEOSTROVSKAYA,
+      MetroStationEnum.GOSTINY_DVOR,
+      MetroStationEnum.MAYAKOVSKAYA,
+      MetroStationEnum.PLOSHCHAD_ALEXANDRA_NEVSKOGO_1,
+      MetroStationEnum.ELIZAROVSKAYA,
+      MetroStationEnum.LOMONOSOVSKAYA,
+      MetroStationEnum.PROLETARSKAYA,
+      MetroStationEnum.OBUKHOVO,
+      MetroStationEnum.RYBATSKOYE,
+    ],
+    Правобережная: [
+      MetroStationEnum.GORNY_INSTITUT,
+      MetroStationEnum.SPASSKAYA,
+      MetroStationEnum.DOSTOEVSKAYA,
+      MetroStationEnum.LIGOVSKIY_PROSPEKT,
+      MetroStationEnum.PLOSHCHAD_ALEXANDRA_NEVSKOGO_2,
+      MetroStationEnum.NOVOCHERKASSKAYA,
+      MetroStationEnum.LADOZHSKAYA,
+      MetroStationEnum.PROSPEKT_BOLSHEVIKOV,
+      MetroStationEnum.ULICA_DYBENKO,
+    ],
+    "Фрунзенско-Приморская": [
+      MetroStationEnum.KOMENDANTSKIY_PROSPEKT,
+      MetroStationEnum.STARAYA_DEREVNYA,
+      MetroStationEnum.KRESTOVSKIY_OSTROV,
+      MetroStationEnum.CHKALOVSKAYA,
+      MetroStationEnum.SPORTIVNAYA,
+      MetroStationEnum.ADMIRALTEYSKAYA,
+      MetroStationEnum.SADOVAYA,
+      MetroStationEnum.ZVENIGORODSKAYA,
+      MetroStationEnum.OBVODNYY_KANAL,
+      MetroStationEnum.VOLKOVSKAYA,
+      MetroStationEnum.BUKHARESTSKAYA,
+      MetroStationEnum.MEZHDUNARODNAYA,
+      MetroStationEnum.PROSPEKT_SLAVY,
+      MetroStationEnum.DUNAISKAYA,
+      MetroStationEnum.SHUSHARY,
+    ],
+  }
+
+  return Object.entries(groupMap).map(([lineName, stations]) => ({
+    label: lineName,
+    options: stations.map(station => ({
+      value: station,
+      label: <MetroStation name={station} indicatorPosition={"start"} />,
+    })),
+  }))
 }
