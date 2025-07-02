@@ -1,9 +1,10 @@
 import type { Metadata } from "next"
 import { ReactNode } from "react"
 import "../globals.css"
+import "antd/dist/reset.css"
 import { Header } from "@/components/Header/Header"
 import { Footer } from "@/components/Footer/Footer"
-import { AppProviders } from "../providers/AppProviders"
+import AppProviders from "./../providers/AppProviders"
 
 export const metadata: Metadata = {
   title: "Create Next App",

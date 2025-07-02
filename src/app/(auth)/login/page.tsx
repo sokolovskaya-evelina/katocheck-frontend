@@ -1,32 +1,62 @@
+"use client"
+
 import React from "react"
-import { Card } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Button } from "@/components/ui/button"
-import { EyeIcon } from "lucide-react"
+import type { FormProps } from "antd"
+import { Button, Card, Form, Input } from "antd"
+import FormItem from "antd/es/form/FormItem"
+import Password from "antd/es/input/Password"
+import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons"
+
+type FieldType = {
+  username?: string
+  password?: string
+}
+
+const onFinish: FormProps<FieldType>["onFinish"] = values => {
+  console.log("Success:", values)
+}
+
+const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = errorInfo => {
+  console.log("Failed:", errorInfo)
+}
 
 export default function LoginPage() {
   return (
     <div className="h-screen flex items-center justify-center">
-      <Card className="w-full max-w-sm p-6 space-y-4">
-        <h1 className="text-2xl font-bold text-center">Вход</h1>
+      <Card title="Вход" className="w-full max-w-sm p-6 space-y-4 text-center">
+        <Form
+          name="login"
+          labelCol={{ span: 8 }}
+          wrapperCol={{ span: 16 }}
+          style={{ maxWidth: 600 }}
+          onFinish={onFinish}
+          onFinishFailed={onFinishFailed}
+          autoComplete="on"
+        >
+          <FormItem<FieldType>
+            label="Логин"
+            name="username"
+            rules={[{ required: true, message: "Пожалуйста, введите логин" }]}
+          >
+            <Input placeholder="Логин" />
+          </FormItem>
 
-        <div className="space-y-2">
-          <Label htmlFor="username">Логин</Label>
-          <Input id="username" placeholder="Введите логин" />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="password">Пароль</Label>
-          <div className="relative">
-            <Input id="password" type="password" placeholder="Введите пароль" className="pr-10" />
-            <EyeIcon className="absolute right-2 top-2.5 h-5 w-5 text-muted-foreground cursor-pointer" />
-          </div>
-        </div>
-
-        <Button className="w-full" color="primary">
-          Войти
-        </Button>
+          <FormItem<FieldType>
+            label="Пароль"
+            name="password"
+            rules={[{ required: true, message: "Пожалуйста, введите пароль" }]}
+          >
+            <Password
+              placeholder="Пароль"
+              iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
+            />
+          </FormItem>
+          <FormItem className="flex justify-center" label={null}>
+            <Button type="primary" htmlType="submit">
+              Войти
+            </Button>
+          </FormItem>
+        </Form>
       </Card>
     </div>
   )

@@ -1,10 +1,12 @@
+@layer theme, base, antd, components, utilities;
+
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
 :root {
   --radius: 0.625rem;
 
-  --background: oklch(1 0 0);
+  --background: #fafafa;
   --foreground: oklch(0.15 0 0);
 
   --card: oklch(1 0 0);

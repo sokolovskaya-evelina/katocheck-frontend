@@ -1,6 +1,6 @@
-import { Mail, Phone, Send } from "lucide-react"
 import { Logo } from "@/components/Header/Logo"
 import { NavLink } from "@/components/NevLink/NavLink"
+import { MailOutlined, PhoneOutlined, SendOutlined } from "@ant-design/icons"
 
 export function Footer() {
   return (
@@ -15,23 +15,23 @@ export function Footer() {
           <NavLink href="/favorites">Избранное</NavLink>
         </div>
       </div>
-      <div className="max-w-screen-xl mx-auto px-6 pb-10 flex flex-col md:flex-row justify-between gap-6 text-sm text-slate-800">
+      <div className="max-w-screen-xl mx-auto px-6 pb-6 flex flex-col md:flex-row justify-between gap-6 text-sm text-slate-800">
         <div>
           <h3 className="font-bold mb-2">КОНТАКТЫ</h3>
           <p className="flex items-center gap-2">
-            <Mail className="w-4 h-4" />
+            <MailOutlined className="w-4 h-4" />
             <a href="mailto:info@katocheck.example.com" className="hover:underline">
               info@katocheck.example.com
             </a>
           </p>
           <p className="flex items-center gap-2 mt-1">
-            <Phone className="w-4 h-4" />
+            <PhoneOutlined className="w-4 h-4" />
             <a href="tel:+711111111" className="hover:underline">
               +7 (111) 111-11-11
             </a>
           </p>
           <p className="flex items-center gap-2 mt-1">
-            <Send className="w-4 h-4" />
+            <SendOutlined className="w-4 h-4" />
             <a href="tg://resolve?domain=sokolovskaya_evelina" className="hover:underline">
               @sokolovskaya_evelina
             </a>

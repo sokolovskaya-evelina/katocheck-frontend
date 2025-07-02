@@ -1,7 +1,8 @@
 import type { Metadata } from "next"
 import { ReactNode } from "react"
 import "../../globals.css"
-import { AppProviders } from "@/app/providers/AppProviders"
+import "antd/dist/reset.css"
+import AppProviders from "@/app/providers/AppProviders"
 
 export const metadata: Metadata = {
   title: "Вход",

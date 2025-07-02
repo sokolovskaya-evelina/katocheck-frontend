@@ -1,12 +1,23 @@
-import { TooltipProvider } from '@/components/ui/tooltip';
-import { Toaster } from '@/components/ui/sonner';
-import { PropsWithChildren } from 'react';
+"use client"
 
-export function AppProviders({ children }: PropsWithChildren) {
+import { StyleProvider } from "@ant-design/cssinjs"
+import { ConfigProvider, theme } from "antd"
+import type { ReactNode } from "react"
+
+export default function AppProviders({ children }: { children: ReactNode }) {
   return (
-    <TooltipProvider delayDuration={150}>
-      {children}
-      <Toaster position="top-right" richColors closeButton />
-    </TooltipProvider>
-  );
+    <StyleProvider hashPriority="high">
+      <ConfigProvider
+        theme={{
+          algorithm: theme.defaultAlgorithm,
+          token: {
+            colorPrimary: "#1677ff",
+            borderRadius: 6,
+          },
+        }}
+      >
+        {children}
+      </ConfigProvider>
+    </StyleProvider>
+  )
 }
