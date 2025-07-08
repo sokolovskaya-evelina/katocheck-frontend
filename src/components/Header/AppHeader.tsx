@@ -4,8 +4,8 @@ import { Button, Drawer, Layout, Menu } from "antd"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
 import Link from "next/link"
-import { MenuOutlined } from "@ant-design/icons"
 import { navItems } from "@/lib/constsnts"
+import { AlignJustify } from "lucide-react"
 
 const { Header } = Layout
 
@@ -34,7 +34,7 @@ export function AppHeader() {
         </div>
 
         <div className="md:hidden">
-          <Button type="text" icon={<MenuOutlined />} onClick={() => setOpen(true)} />
+          <Button type="text" icon={<AlignJustify />} onClick={() => setOpen(true)} />
         </div>
 
         <Drawer placement="right" onClose={() => setOpen(false)} open={open} width={250}>

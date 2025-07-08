@@ -5,7 +5,7 @@ import type { FormProps } from "antd"
 import { Button, Card, Form, Input } from "antd"
 import FormItem from "antd/es/form/FormItem"
 import Password from "antd/es/input/Password"
-import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons"
+import { Eye, EyeClosed } from "lucide-react"
 
 type FieldType = {
   username?: string
@@ -47,7 +47,7 @@ export default function LoginPage() {
           >
             <Password
               placeholder="Пароль"
-              iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
+              iconRender={visible => (visible ? <Eye /> : <EyeClosed />)}
             />
           </FormItem>
           <FormItem className="flex justify-center" label={null}>

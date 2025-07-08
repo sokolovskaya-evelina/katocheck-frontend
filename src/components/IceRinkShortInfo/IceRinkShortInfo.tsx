@@ -1,43 +1,40 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
+import { Card, Flex, Tag } from "antd"
 import { MapPin } from "lucide-react"
 import Link from "next/link"
 import { MetroStations } from "@/components/MetroStation/MetroStations"
-import { Badge } from "@/components/ui/badge"
 import { FavoriteButton } from "@/components/FavoriteButton/FavoriteButton"
 import { RinkShortInfoType } from "@/types/types"
+import Text from "antd/es/typography/Text"
 
 export default function IceRinkShortInfo({ rink }: { rink: RinkShortInfoType }) {
   const hasSchedule = Object.keys(rink.schedule ?? {}).length > 0
+
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="text-lg flex justify-between items-center overflow-hidden">
-          <Tooltip>
-            <TooltipTrigger className={"hover:text-primary transition max-w-full  truncate"}>
-              <Link href={`/rinks/${rink.rinkId}`}>{rink.name}</Link>
-            </TooltipTrigger>
-            <TooltipContent>{rink.name}</TooltipContent>
-          </Tooltip>
-          <FavoriteButton isFavorite={rink.isFavorite} />
-        </CardTitle>
-        <CardDescription>
-          <p className="flex items-center gap-2">
-            <MapPin className="w-4 h-4" />
-            {rink.address}
-          </p>
-          {rink.metroStations.length > 0 ? (
-            <MetroStations metroStations={rink.metroStations} />
-          ) : (
-            rink.district
-          )}
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="flex gap-2 justify-end">
-        <Badge variant={hasSchedule ? "default" : "secondary"}>
+    <Card
+      title={
+        <Text ellipsis={{ tooltip: true }}>
+          <Link href={`/rinks/${rink.rinkId}`}>{rink.name}</Link>
+        </Text>
+      }
+      extra={<FavoriteButton isFavorite={rink.isFavorite} />}
+    >
+      <Flex vertical gap={5}>
+        <Flex align="center" gap={5}>
+          <MapPin className="w-4 h-4" />
+          <Text>{rink.address}</Text>
+        </Flex>
+        {rink.metroStations.length > 0 ? (
+          <MetroStations metroStations={rink.metroStations} />
+        ) : (
+          <Text>{rink.district}</Text>
+        )}
+      </Flex>
+
+      <Flex justify="flex-end">
+        <Tag color={hasSchedule ? "blue" : "default"}>
           {hasSchedule ? "Расписание доступно" : "Нет расписания"}
-        </Badge>
-      </CardContent>
+        </Tag>
+      </Flex>
     </Card>
   )
 }

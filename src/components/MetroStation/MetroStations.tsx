@@ -1,19 +1,23 @@
+import { Space } from "antd"
 import { MetroStation } from "./MetroStation"
 import { MetroStationEnum } from "@/types/enums"
+import Text from "antd/es/typography/Text"
 
-export function MetroStations({ metroStations = [] }: { metroStations: MetroStationEnum[] }) {
+type Props = {
+  metroStations?: MetroStationEnum[]
+}
+
+export function MetroStations({ metroStations = [] }: Props) {
+  if (metroStations.length === 0) return null
+
   return (
-    metroStations.length > 0 && (
-      <div className="flex flex-wrap gap-1 mt-2">
-        {metroStations.map((station, index) => (
-          <div key={index} className="flex">
-            <div className="flex items-baseline gap-1">
-              <MetroStation name={station} />
-            </div>
-            {index < metroStations.length - 1 && ","}
-          </div>
-        ))}
-      </div>
-    )
+    <Space wrap size={[8, 4]}>
+      {metroStations.map((station, index) => (
+        <Text key={index}>
+          <MetroStation name={station} />
+          {index < metroStations.length - 1 && <span>,</span>}
+        </Text>
+      ))}
+    </Space>
   )
 }
