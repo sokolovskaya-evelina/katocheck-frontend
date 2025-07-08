@@ -1,10 +1,9 @@
 import type { Metadata } from "next"
 import { ReactNode } from "react"
-import "../globals.css"
-import "antd/dist/reset.css"
-import { Header } from "@/components/Header/Header"
-import { Footer } from "@/components/Footer/Footer"
-import AppProviders from "./../providers/AppProviders"
+import { AppHeader } from "@/components/Header/AppHeader"
+import { Layout } from "antd"
+import { Content } from "antd/es/layout/layout"
+import { AppFooter } from "@/components/Footer/AppFooter"
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -17,16 +16,14 @@ export default function RootLayout({
   children: ReactNode
 }>) {
   return (
-    <html lang="ru">
-      <body className="bg-gray-50 text-gray-900">
-        <AppProviders>
-          <Header />
-          <main className="max-w-screen-xl mx-auto px-6 py-4 min-h-[calc(100vh-60px-225px)]">
-            {children}
-          </main>
-          <Footer />
-        </AppProviders>
-      </body>
-    </html>
+    <Layout>
+      <AppHeader />
+      <Content>
+        <div className="max-w-screen-xl mx-auto py-4 min-h-[calc(100vh-64px-226px)]">
+          {children}
+        </div>
+      </Content>
+      <AppFooter />
+    </Layout>
   )
 }

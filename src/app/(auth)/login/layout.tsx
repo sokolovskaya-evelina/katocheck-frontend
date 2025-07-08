@@ -1,8 +1,5 @@
 import type { Metadata } from "next"
 import { ReactNode } from "react"
-import "../../globals.css"
-import "antd/dist/reset.css"
-import AppProviders from "@/app/providers/AppProviders"
 
 export const metadata: Metadata = {
   title: "Вход",
@@ -14,13 +11,5 @@ export default function LoginLayout({
 }: Readonly<{
   children: ReactNode
 }>) {
-  return (
-    <html lang="ru">
-      <body className="bg-gray-50 text-gray-900">
-        <AppProviders>
-          <main className="max-w-screen-xl mx-auto">{children}</main>
-        </AppProviders>
-      </body>
-    </html>
-  )
+  return <main className="max-w-screen-xl mx-auto">{children}</main>
 }
