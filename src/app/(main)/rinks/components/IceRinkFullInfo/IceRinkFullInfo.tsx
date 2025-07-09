@@ -1,102 +1,115 @@
 import Image from "next/image"
-import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
-import { MapPin, Phone, Train, Map } from "lucide-react"
-import { Heart } from "lucide-react"
-import { FaVk, FaTelegramPlane, FaInstagram, FaFacebook, FaGlobe } from "react-icons/fa"
+import { Button, Card, Divider, Flex, Space } from "antd"
+import { Heart, Map, MapPin, Phone, Train } from "lucide-react"
+import { FaFacebook, FaGlobe, FaInstagram, FaTelegramPlane, FaVk } from "react-icons/fa"
 import { MetroStations } from "@/components/MetroStation/MetroStations"
 import { RinkType } from "@/types/types"
+import Text from "antd/es/typography/Text"
+import Title from "antd/es/typography/Title"
+import TextLink from "antd/es/typography/Link"
 
 const getSocialIcon = (name: string) => {
   switch (name.toLowerCase()) {
     case "vk":
     case "вконтакте":
-      return <FaVk className="w-4 h-4" />
+      return <FaVk className="w-4 h-4 fill-slate-500" />
     case "telegram":
-      return <FaTelegramPlane className="w-4 h-4" />
+      return <FaTelegramPlane className="w-4 h-4 fill-slate-500" />
     case "instagram":
-      return <FaInstagram className="w-4 h-4" />
+      return <FaInstagram className="w-4 h-4 fill-slate-500" />
     case "facebook":
-      return <FaFacebook className="w-4 h-4" />
+      return <FaFacebook className="w-4 h-4 fill-slate-500" />
     default:
-      return <FaGlobe className="w-4 h-4" />
+      return <FaGlobe className="w-4 h-4 fill-slate-500" />
   }
 }
 
 type Props = { rink: RinkType }
 
 export default function IceRinkFullInfo({ rink }: Props) {
-  return (
-    <Card className="mb-4 overflow-hidden p-0">
-      <Image
-        src={rink?.imageUrl ?? "/images/ice-rink.jpg"}
-        alt="Каток"
-        width={1200}
-        height={400}
-        className="w-full h-[250px] object-cover"
-      />
-      <div className="flex flex-col md:flex-row justify-between gap-4 p-6 pt-0">
-        <div className="space-y-2">
-          <h1 className="text-3xl font-bold mb-2">{rink.name}</h1>
+  const imageSrc = rink.imageUrl || "/images/fallback-rink.png"
 
-          <div className="flex items-center gap-2 text-muted-foreground">
-            <MapPin className="w-4 h-4" />
-            <span>{rink.address}</span>
-          </div>
+  return (
+    <Card
+      className="overflow-hidden p-0"
+      cover={
+        <Image
+          src={imageSrc}
+          alt={rink.name}
+          width={1280}
+          height={250}
+          className="w-full h-[250px] object-cover"
+        />
+      }
+    >
+      <div className="flex flex-col md:flex-row justify-between gap-6 px-6 pb-6">
+        <Flex vertical gap={8} className="max-w-full">
+          <Title level={3}>{rink.name}</Title>
+
+          <Space size="small" align="center">
+            <MapPin className="w-4 h-4 stroke-slate-500" />
+            <Text>{rink.address}</Text>
+          </Space>
 
           {rink.district && (
-            <div className="flex items-center gap-2 text-muted-foreground">
-              <Map className="w-4 h-4" />
-              <span>{rink.district}</span>
-            </div>
+            <Space size="small" align="center">
+              <Map className="w-4 h-4 stroke-slate-500" />
+              <Text>{rink.district}</Text>
+            </Space>
           )}
 
           {rink.metroStations?.length > 0 && (
-            <div className="flex items-center gap-2 text-muted-foreground flex-wrap">
-              <Train className="w-4 h-4" />
+            <Space size="small" align="center" wrap>
+              <Train className="w-4 h-4 stroke-slate-500" />
               <MetroStations metroStations={rink.metroStations} />
-            </div>
+            </Space>
           )}
 
-          {rink.phones?.length > 0 && (
-            <div className="flex items-center gap-2 text-muted-foreground flex-wrap">
-              <Phone className="w-4 h-4" />
-              {rink.phones.map((phone, i) => (
-                <a
-                  key={i}
-                  href={`tel:${phone}`}
-                  className="underline underline-offset-2 hover:text-primary transition"
-                >
-                  {phone}
-                </a>
-              ))}
-            </div>
-          )}
-
-          {rink.socials?.map((social, i) => (
-            <div
-              key={social.name}
-              className="flex items-center gap-2 text-muted-foreground flex-wrap"
-            >
-              {getSocialIcon(social.name)}
-              <a
-                key={i}
-                target="_blank"
-                rel="noopener noreferrer"
-                href={social.url}
-                aria-label={`Перейти в ${social.name}`}
-                className="underline underline-offset-2 hover:text-primary transition"
+          <Space size="small" align="center">
+            <Phone className="w-4 h-4 stroke-slate-500" />
+            {rink.phones?.length > 0 && (
+              <Space
+                size="small"
+                className="flex flex-wrap items-center"
+                split={<Divider type="vertical" />}
               >
-                <span>{social.name}</span>
-              </a>
-            </div>
-          ))}
-        </div>
+                {rink.phones.map((phone, i) => (
+                  <TextLink key={`phone-${i}`} href={`tel:${phone}`}>
+                    {phone}
+                  </TextLink>
+                ))}
+              </Space>
+            )}
+          </Space>
 
-        <Button variant="outline" className="flex gap-2">
-          <Heart
-            className={rink.isFavorite ? "fill-primary text-primary" : "text-muted-foreground"}
-          />
+          {rink.socials?.length > 0 && (
+            <Space
+              size="small"
+              className="flex flex-wrap items-center mt-1"
+              split={<Divider type="vertical" />}
+            >
+              {rink.socials.map((social, i) => (
+                <span key={`social-${i}`} className="flex items-center gap-1">
+                  {getSocialIcon(social.name)}
+                  <TextLink target="_blank" rel="noopener noreferrer" href={social.url}>
+                    {social.name}
+                  </TextLink>
+                </span>
+              ))}
+            </Space>
+          )}
+        </Flex>
+
+        <Button
+          className="w-full md:w-auto"
+          type="default"
+          iconPosition="end"
+          icon={
+            <Heart
+              className={rink.isFavorite ? "fill-primary stroke-transparent" : "stroke-slate-500"}
+            />
+          }
+        >
           Добавить в избранное
         </Button>
       </div>
