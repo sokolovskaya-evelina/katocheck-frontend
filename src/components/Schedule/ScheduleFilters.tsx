@@ -1,93 +1,99 @@
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Label } from "@/components/ui/label"
-import FiltersCard from "@/components/Filters/FiltersCard"
-import FiltersModal from "@/components/Filters/FiltersModal"
+"use client"
+
+import { useMemo, useState } from "react"
+import FilterBar from "@/components/FilterBar/FilterBar"
+import { FilterBarItem, FilterState } from "@/components/FilterBar/types/filter.types"
+import { Button, Card, Flex, Modal } from "antd"
+import { ListFilter } from "lucide-react"
 
 const ScheduleFilters = () => {
+  const [filters, setFilters] = useState<FilterState>({})
+  const [open, setOpen] = useState(false)
+
+  const items: FilterBarItem[] = useMemo(
+    () => [
+      {
+        name: "rinkIds",
+        type: "select",
+        label: "Каток",
+        options: [
+          { value: 1, label: "Каток 1" },
+          { value: 2, label: "Каток 2" },
+          { value: 3, label: "Каток 3" },
+          { value: 4, label: "Каток 4" },
+        ],
+        allowClear: true,
+        mode: "multiple",
+        maxTagCount: "responsive",
+      },
+      {
+        name: "metroIds",
+        type: "select",
+        label: "Станция метро",
+        options: [{ label: "Озерки", value: 1 }],
+        allowClear: true,
+        mode: "multiple",
+        maxTagCount: "responsive",
+      },
+      {
+        name: "sessionTypes",
+        type: "select",
+        label: "Вид сеанса",
+        allowClear: true,
+        options: [{ label: "Свободное катание", value: 1 }],
+        mode: "multiple",
+        maxTagCount: "responsive",
+      },
+      {
+        name: "isFavorite",
+        type: "select",
+        label: "Вид сеанса",
+        allowClear: true,
+        options: [{ label: "Свободное катание", value: 1 }],
+        mode: "multiple",
+        maxTagCount: "responsive",
+      },
+    ],
+    []
+  )
+
+  const handleCancel = () => setOpen(false)
+
   return (
     <>
-      <FiltersCard>
-        <Select>
-          <SelectTrigger className="w-48">
-            <SelectValue placeholder="Каток" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="kre">Крестовский остров</SelectItem>
-            <SelectItem value="sev">Севкабель</SelectItem>
-          </SelectContent>
-        </Select>
-        <Select>
-          <SelectTrigger className="w-48">
-            <SelectValue placeholder="Метро" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="prim">Приморская</SelectItem>
-            <SelectItem value="mosk">Московская</SelectItem>
-          </SelectContent>
-        </Select>
-        <Select>
-          <SelectTrigger className="w-48">
-            <SelectValue placeholder="Вид сеанса" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="free">Свободное катание</SelectItem>
-            <SelectItem value="learn">Учебный сеанс</SelectItem>
-          </SelectContent>
-        </Select>
-        <div className="flex items-center space-x-2">
-          <Checkbox color="primary" id="favorites" />
-          <Label htmlFor="favorites">Избранное</Label>
-        </div>
-      </FiltersCard>
-      <FiltersModal>
-        <div>
-          <Label className="mb-2">Каток</Label>
-          <Select>
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder="Каток" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="kre">Крестовский остров</SelectItem>
-              <SelectItem value="sev">Севкабель</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-        <div>
-          <Label className="mb-2">Метро</Label>
-          <Select>
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder="Метро" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="prim">Приморская</SelectItem>
-              <SelectItem value="mosk">Московская</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-        <div>
-          <Label className="mb-2">Вид сеанса</Label>{" "}
-          <Select>
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder="Вид сеанса" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="free">Свободное катание</SelectItem>
-              <SelectItem value="learn">Учебный сеанс</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-        <div className="flex items-center space-x-2">
-          <Checkbox color="primary" id="favorites" />
-          <Label htmlFor="favorites">Избранное</Label>
-        </div>
-      </FiltersModal>
+      <div className="hidden lg:block max-w-screen-xl mx-auto w-full">
+        <Card>
+          <Flex align="end" gap={15}>
+            <FilterBar filterValues={filters} onFilterChange={setFilters} items={items} />
+          </Flex>
+        </Card>
+      </div>
+
+      <div className="lg:hidden">
+        <Button type="primary" icon={<ListFilter />} onClick={() => setOpen(!open)}>
+          Фильтры
+        </Button>
+      </div>
+
+      <Modal title="Фильтры" open={open} footer={false} onCancel={handleCancel}>
+        <Flex vertical gap={15} className="w-full">
+          <FilterBar
+            filterValues={filters}
+            onFilterChange={setFilters}
+            items={items}
+            showResetBtn={false}
+          />
+          <Flex justify="space-between">
+            <Button onClick={() => setFilters({})}>Сбросить фильтры</Button>
+            <Flex gap={15}>
+              <Button onClick={handleCancel}>Закрыть</Button>
+              <Button type="primary" onClick={handleCancel}>
+                Применить
+              </Button>
+            </Flex>
+          </Flex>
+        </Flex>
+      </Modal>
     </>
   )
 }

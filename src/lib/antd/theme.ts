@@ -17,7 +17,7 @@ const theme: ThemeConfig = {
   },
   components: {
     Button: {
-      colorPrimary: "red",
+      colorPrimary: "#0092fd",
       borderRadius: 6,
     },
     Layout: {
