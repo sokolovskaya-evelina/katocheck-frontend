@@ -2,23 +2,24 @@ import Map from "../components/Map/Map"
 import IceRinkFullInfo from "./../components/IceRinkFullInfo/IceRinkFullInfo"
 import { mockRink } from "@/mocks/mockData"
 import { RinkScheduleAccordion } from "./../components/RinkScheduleAccordion/RinkScheduleAccordion"
-import { Card, Row, Col, Space } from "antd"
+import { Card, Flex } from "antd"
 
 export default function Page() {
   return (
-    <Space direction="vertical" size="large" className="w-full">
+    <Flex vertical gap={32}>
       <IceRinkFullInfo rink={mockRink} />
 
-      <Row gutter={[16, 16]} align="top">
-        <Col xs={24} lg={12}>
+      <Flex gap={16} wrap="wrap">
+        <div className="flex-[1_1_100%] lg:flex-[1_1_48%] min-w-[300px]">
           <RinkScheduleAccordion schedule={mockRink.schedule} />
-        </Col>
-        <Col xs={24} lg={12}>
+        </div>
+
+        <div className="flex-[1_1_100%] lg:flex-[1_1_48%] min-w-[300px]">
           <Card>
             <Map location={[60.036484, 30.306125]} />
           </Card>
-        </Col>
-      </Row>
-    </Space>
+        </div>
+      </Flex>
+    </Flex>
   )
 }
