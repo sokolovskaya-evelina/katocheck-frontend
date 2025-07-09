@@ -4,7 +4,7 @@ import { FC, PropsWithChildren } from "react"
 
 const FiltersCard: FC<PropsWithChildren> = ({ children }) => {
   return (
-    <Card className="hidden lg:flex p-4 mb-4">
+    <Card className="hidden lg:flex p-4">
       <CardContent className="flex items-center gap-4">
         {children}
 

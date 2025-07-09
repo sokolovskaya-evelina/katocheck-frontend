@@ -1,33 +1,49 @@
-'use client';
+"use client"
 
-import { Heart } from 'lucide-react';
-import { Button } from '../ui/button';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { toast } from 'sonner';
+import { Heart } from "lucide-react"
+import { Button, Tooltip, notification } from "antd"
+import { useState } from "react"
 
-export function FavoriteButton({ isFavorite }: { isFavorite: boolean }) {
-  const handleClick = (): void => {
-    toast("Каток удалён", {
-      duration: 5000,
-      action: {
-        label: "Отменить",
-        onClick: () => console.log("Undo"),
-      },
+export function FavoriteButton({ isFavorite: initial }: { isFavorite: boolean }) {
+  const [isFavorite, setIsFavorite] = useState(initial)
+  const [api, contextHolder] = notification.useNotification()
+
+  const handleClick = () => {
+    const prev = isFavorite
+    const next = !isFavorite
+    setIsFavorite(next)
+
+    api.error({
+      message: next ? "Каток добавлен в избранное" : "Каток удалён",
+      duration: 5,
+      key: "favorite-toast",
+      actions: (
+        <Button
+          type="link"
+          size="small"
+          onClick={() => {
+            setIsFavorite(prev)
+            api.destroy("favorite-toast")
+          }}
+        >
+          Отменить
+        </Button>
+      ),
+      showProgress: true,
+      pauseOnHover: true,
     })
   }
 
   return (
-    <Tooltip>
-      <TooltipTrigger asChild>
-        <Button onClick={handleClick} variant="ghost" size="icon">
-          <Heart
-            className={
-              isFavorite ? 'fill-primary text-primary' : 'text-muted-foreground'
-            }
-          />
-        </Button>
-      </TooltipTrigger>
-      <TooltipContent>Добавить в избранное</TooltipContent>
+    <Tooltip title={isFavorite ? "Удалить из избранного" : "Добавить в избранное"}>
+      <Button
+        type="text"
+        icon={
+          <Heart className={isFavorite ? "fill-primary stroke-transparent" : "stroke-slate-400"} />
+        }
+        onClick={handleClick}
+      />
+      {contextHolder}
     </Tooltip>
-  );
+  )
 }
