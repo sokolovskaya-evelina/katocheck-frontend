@@ -1,15 +1,12 @@
 "use client"
 
 import { useMemo, useState } from "react"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { Calendar } from "@/components/ui/calendar"
+import type { CollapseProps } from "antd"
+import { Button, Card, Collapse, DatePicker, Flex, Input, Space, Table } from "antd"
+import { Files, Save, SquarePen, Trash } from "lucide-react"
 import dayjs from "dayjs"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { ChevronDown, ChevronRight, Files, Save, SquarePen, Trash } from "lucide-react"
-import ScheduleHeader from "./ScheduleHeader"
+import type { ColumnsType } from "antd/es/table"
+import useBreakpoint from "antd/es/grid/hooks/useBreakpoint"
 
 export type ScheduleItemType = {
   rinkId: string
@@ -21,9 +18,10 @@ export type ScheduleItemType = {
 }
 
 export default function SkatingScheduleTable() {
+  const screens = useBreakpoint()
+
   const [items, setItems] = useState<ScheduleItemType[]>([])
-  const [collapsed, setCollapsed] = useState<Record<string, boolean>>({})
-  const [newDate, setNewDate] = useState<Date | undefined>(undefined)
+  const [newDate, setNewDate] = useState<dayjs.Dayjs | null>(null)
   const [mode, setMode] = useState<"view" | "edit">("edit")
 
   const grouped = useMemo(() => {
@@ -37,8 +35,7 @@ export default function SkatingScheduleTable() {
 
   const handleAddDay = () => {
     if (!newDate) return
-    const date = dayjs(newDate).startOf("day")
-
+    const date = newDate.startOf("day")
     setItems(prev => [
       ...prev,
       {
@@ -50,7 +47,7 @@ export default function SkatingScheduleTable() {
         note: "",
       },
     ])
-    setNewDate(undefined)
+    setNewDate(null)
   }
 
   const handleAddSession = (dayKey: string) => {
@@ -94,182 +91,165 @@ export default function SkatingScheduleTable() {
     setItems(prev => prev.map(i => (i === item ? { ...i, [field]: value } : i)))
   }
 
+  const columns = (): ColumnsType<ScheduleItemType> => [
+    {
+      title: "Начало",
+      dataIndex: "startTime",
+      render: (value, record) =>
+        mode === "edit" ? (
+          <Input
+            type="time"
+            value={dayjs(value).format("HH:mm")}
+            onChange={e => {
+              const d = dayjs(value)
+              updateItem(
+                record,
+                "startTime",
+                d
+                  .hour(+e.target.value.split(":"[0]))
+                  .minute(+e.target.value.split(":"[1]))
+                  .toISOString()
+              )
+            }}
+          />
+        ) : (
+          dayjs(value).format("HH:mm")
+        ),
+    },
+    {
+      title: "Конец",
+      dataIndex: "endTime",
+      render: (value, record) =>
+        mode === "edit" ? (
+          <Input
+            type="time"
+            value={dayjs(value).format("HH:mm")}
+            onChange={e => {
+              const d = dayjs(value)
+              updateItem(
+                record,
+                "endTime",
+                d
+                  .hour(+e.target.value.split(":"[0]))
+                  .minute(+e.target.value.split(":"[1]))
+                  .toISOString()
+              )
+            }}
+          />
+        ) : (
+          dayjs(value).format("HH:mm")
+        ),
+    },
+    {
+      title: "Тип сеанса",
+      dataIndex: "sessionType",
+      render: (value, record) =>
+        mode === "edit" ? (
+          <Input value={value} onChange={e => updateItem(record, "sessionType", e.target.value)} />
+        ) : (
+          value
+        ),
+    },
+    {
+      title: "Арена",
+      dataIndex: "arena",
+      render: (value, record) =>
+        mode === "edit" ? (
+          <Input value={value} onChange={e => updateItem(record, "arena", e.target.value)} />
+        ) : (
+          value || "-"
+        ),
+    },
+    {
+      title: "Примечание",
+      dataIndex: "note",
+      render: (value, record) =>
+        mode === "edit" ? (
+          <Input value={value} onChange={e => updateItem(record, "note", e.target.value)} />
+        ) : (
+          value || "-"
+        ),
+    },
+    {
+      title: "",
+      key: "actions",
+      render: (_, record) =>
+        mode === "edit" ? (
+          <Space wrap>
+            <Button
+              size="small"
+              onClick={() => handleDuplicateSession(record)}
+              icon={<Files className="w-4 h-4" />}
+            />
+            <Button
+              size="small"
+              danger
+              onClick={() => handleRemoveSession(record)}
+              icon={<Trash className="w-4 h-4" />}
+            />
+          </Space>
+        ) : null,
+    },
+  ]
+
+  const collapseItems: CollapseProps["items"] = Object.entries(grouped).map(
+    ([dayKey, sessions]) => ({
+      key: dayKey,
+      label: (
+        <Flex align="center" justify="space-between" wrap>
+          <span>{dayjs(dayKey).format("DD.MM.YYYY")}</span>
+          {mode === "edit" && (
+            <Space wrap>
+              <Button size="small" onClick={() => handleAddSession(dayKey)}>
+                + Сеанс
+              </Button>
+              <Button
+                size="small"
+                danger
+                onClick={() => handleRemoveDay(dayKey)}
+                icon={<Trash className="w-4 h-4" />}
+              />
+            </Space>
+          )}
+        </Flex>
+      ),
+      children: (
+        <Table
+          scroll={{ x: screens.sm ? undefined : "max-content" }}
+          columns={columns()}
+          dataSource={sessions}
+          pagination={false}
+          rowKey={i => i.startTime + i.endTime}
+        />
+      ),
+    })
+  )
+
   return (
     <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          Текущее расписание
-          {mode === "edit" ? (
-            <Button variant="ghost" className="border-primary" onClick={() => setMode("view")}>
-              <Save className="stroke-primary" />
-            </Button>
-          ) : (
-            <Button variant="ghost" onClick={() => setMode("edit")}>
-              <SquarePen />
-            </Button>
-          )}
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4 py-6">
+      <Card.Meta
+        title={
+          <Flex align="center" gap={8} wrap="wrap">
+            Текущее расписание
+            {mode === "edit" ? (
+              <Button type="text" onClick={() => setMode("view")} icon={<Save />} />
+            ) : (
+              <Button type="text" onClick={() => setMode("edit")} icon={<SquarePen />} />
+            )}
+          </Flex>
+        }
+      />
+      <Card style={{ marginTop: 24 }}>
         {mode === "edit" && (
-          <div className="flex gap-2">
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button variant="outline">
-                  {newDate ? dayjs(newDate).format("dddd (DD.MM)") : "Выбрать день"}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent>
-                <Calendar mode="single" selected={newDate} onSelect={setNewDate} />
-              </PopoverContent>
-            </Popover>
+          <Flex gap={8} wrap style={{ marginBottom: 16 }}>
+            <DatePicker value={newDate} onChange={setNewDate} />
             <Button onClick={handleAddDay} disabled={!newDate}>
               Добавить день
             </Button>
-          </div>
+          </Flex>
         )}
-
-        {Object.entries(grouped).map(([dayKey, sessions]) => {
-          const isCollapsed = collapsed[dayKey] ?? false
-
-          return (
-            <div key={dayKey} className="border rounded-md p-3">
-              <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center gap-2">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setCollapsed(prev => ({ ...prev, [dayKey]: !isCollapsed }))}
-                  >
-                    {isCollapsed ? <ChevronRight /> : <ChevronDown />}
-                  </Button>
-                  <h2 className="text-lg font-semibold">{dayjs(dayKey).format("DD.MM.YYYY")}</h2>
-                </div>
-                {mode === "edit" && (
-                  <div className="flex gap-2">
-                    <Button variant="outline" size="sm" onClick={() => handleAddSession(dayKey)}>
-                      + Сеанс
-                    </Button>
-                    <Button
-                      variant="outline"
-                      className="border-destructive stroke-destructive fill-destructive"
-                      size="sm"
-                      onClick={() => handleRemoveDay(dayKey)}
-                    >
-                      <Trash className="stroke-destructive" />
-                    </Button>
-                  </div>
-                )}
-              </div>
-
-              {!isCollapsed && (
-                <Table>
-                  <ScheduleHeader />
-                  <TableBody>
-                    {sessions.map(item => (
-                      <TableRow key={item.startTime + item.endTime + item.sessionType}>
-                        <TableCell>
-                          {mode === "edit" ? (
-                            <Input
-                              type="time"
-                              value={dayjs(item.startTime).format("HH:mm")}
-                              onChange={e => {
-                                const d = dayjs(item.startTime)
-                                updateItem(
-                                  item,
-                                  "startTime",
-                                  d
-                                    .hour(+e.target.value.split(":"[0]))
-                                    .minute(+e.target.value.split(":"[1]))
-                                    .toISOString()
-                                )
-                              }}
-                            />
-                          ) : (
-                            dayjs(item.startTime).format("HH:mm")
-                          )}
-                        </TableCell>
-                        <TableCell>
-                          {mode === "edit" ? (
-                            <Input
-                              type="time"
-                              value={dayjs(item.endTime).format("HH:mm")}
-                              onChange={e => {
-                                const d = dayjs(item.endTime)
-                                updateItem(
-                                  item,
-                                  "endTime",
-                                  d
-                                    .hour(+e.target.value.split(":"[0]))
-                                    .minute(+e.target.value.split(":"[1]))
-                                    .toISOString()
-                                )
-                              }}
-                            />
-                          ) : (
-                            dayjs(item.endTime).format("HH:mm")
-                          )}
-                        </TableCell>
-                        <TableCell>
-                          {mode === "edit" ? (
-                            <Input
-                              value={item.sessionType}
-                              onChange={e => updateItem(item, "sessionType", e.target.value)}
-                            />
-                          ) : (
-                            item.sessionType
-                          )}
-                        </TableCell>
-                        <TableCell>
-                          {mode === "edit" ? (
-                            <Input
-                              value={item.arena ?? ""}
-                              onChange={e => updateItem(item, "arena", e.target.value)}
-                            />
-                          ) : (
-                            item.arena || "-"
-                          )}
-                        </TableCell>
-                        <TableCell>
-                          {mode === "edit" ? (
-                            <Input
-                              value={item.note ?? ""}
-                              onChange={e => updateItem(item, "note", e.target.value)}
-                            />
-                          ) : (
-                            item.note || "-"
-                          )}
-                        </TableCell>
-                        <TableCell className="flex gap-2">
-                          {mode === "edit" && (
-                            <>
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => handleDuplicateSession(item)}
-                              >
-                                <Files className="w-4 h-4" />
-                              </Button>
-                              <Button
-                                variant="outline"
-                                className="border-destructive stroke-destructive fill-destructive"
-                                size="sm"
-                                onClick={() => handleRemoveSession(item)}
-                              >
-                                <Trash className="stroke-destructive w-4 h-4" />
-                              </Button>
-                            </>
-                          )}
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              )}
-            </div>
-          )
-        })}
-      </CardContent>
+        <Collapse items={collapseItems} />
+      </Card>
     </Card>
   )
 }

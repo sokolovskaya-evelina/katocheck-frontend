@@ -1,28 +1,25 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import Description from "@/components/Description/Description"
-import { Save, SquarePen, Plus, X } from "lucide-react"
-import { Button } from "@/components/ui/button"
+"use client"
+
 import { useMemo, useState } from "react"
-import { Label } from "@/components/ui/label"
-import { Input } from "@/components/ui/input"
-import Map from "@/app/(main)/rinks/components/Map/Map"
-import { DistrictEnum } from "@/types/enums"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
+import { Button, Card, Form, Input, Select, Space, Row, Col, Descriptions } from "antd"
 import { Controller, useForm } from "react-hook-form"
-import MultiSelect, { MultiSelectOption } from "@/components/MultiSelect/MultiSelect"
-import { Badge } from "@/components/ui/badge"
-import { getMetroStationOptions } from "@/lib/utils"
+import { Plus, Save, SquarePen } from "lucide-react"
+import { DistrictEnum } from "@/types/enums"
+import Map from "@/app/(main)/rinks/components/Map/Map"
+import Title from "antd/es/typography/Title"
+
+const descriptionItems = [
+  { key: "name", label: "Название катка", children: "Озерки" },
+  { key: "address", label: "Адресс", children: "Озерки" },
+  { key: "metro", label: "Станции метро", children: "Озерки" },
+  { key: "district", label: "Район", children: "Озерки" },
+  { key: "phones", label: "Номера телефонов", children: "Озерки" },
+  { key: "socials", label: "Социальные сети", children: "Озерки" },
+]
 
 export default function Info() {
-  const [mode, setMode] = useState<"view" | "edit">("edit")
+  const [mode, setMode] = useState<"view" | "edit">("view")
   const [socials, setSocials] = useState([{ name: "", url: "" }])
-  const [selected, setSelected] = useState<string[]>([])
 
   const { control, handleSubmit } = useForm({
     defaultValues: {
@@ -49,148 +46,97 @@ export default function Info() {
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          Общая информация
+    <Card
+      title={
+        <Space>
+          <Title level={4} style={{ margin: 0 }}>
+            Общая информация
+          </Title>
           {mode === "edit" ? (
-            <Button variant="ghost" className="border-primary" onClick={handleSubmit(onSubmit)}>
-              <Save className="stroke-primary" />
-            </Button>
+            <Button icon={<Save />} type="text" onClick={handleSubmit(onSubmit)} />
           ) : (
-            <Button variant="ghost" onClick={() => setMode("edit")}>
-              <SquarePen />
-            </Button>
+            <Button icon={<SquarePen />} type="text" onClick={() => setMode("edit")} />
           )}
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4 py-6">
-        {mode === "edit" ? (
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            className="flex flex-col lg:flex-row items-start gap-4"
-          >
-            <div className="lg:w-1/2 space-y-6">
-              {/* Общая информация */}
-              <div className="grid xs:grid-cols-1 lg:grid-cols-2 gap-4">
-                <div className="flex flex-col gap-2">
-                  <Label>Название катка</Label>
-                  <Controller
-                    name="name"
-                    control={control}
-                    render={({ field }) => <Input {...field} />}
-                  />
-                </div>
-                <div className="flex flex-col gap-2">
-                  <Label>Адрес</Label>
-                  <Controller
-                    name="address"
-                    control={control}
-                    render={({ field }) => <Input {...field} />}
-                  />
-                </div>
-                <div className="flex flex-col gap-2">
-                  <Label>Район</Label>
-                  <Controller
-                    name="district"
-                    control={control}
-                    render={({ field }) => (
-                      <Select onValueChange={field.onChange} value={field.value}>
-                        <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Район" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {districtOptions.map(({ value, label }) => (
-                            <SelectItem key={value} value={value}>
-                              {label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    )}
-                  />
-                </div>
-                <div className="flex flex-col gap-2">
-                  <Label>Станции метро</Label>
-                  <MultiSelect
-                    groups={getMetroStationOptions()}
-                    value={selected}
-                    onChange={setSelected}
-                    maxTagsCount={2}
-                    renderTag={(option: MultiSelectOption, remove) => (
-                      <Badge
-                        key={option.value}
-                        variant="outline"
-                        className="flex items-center gap-1 px-2 py-1 rounded-full text-sm"
-                      >
-                        {option.label}
-                        <X className="w-3 h-3 cursor-pointer" onClick={remove} />
-                      </Badge>
-                    )}
-                  />
-                </div>
-              </div>
-
-              {/* Контакты и соцсети */}
-              <div className="grid xs:grid-cols-1 lg:grid-cols-2 gap-4">
-                <div className="flex flex-col gap-2">
-                  <Label>Номера телефонов</Label>
-                  <Controller
-                    name="phones"
-                    control={control}
-                    render={({ field }) => <Input {...field} />}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label>Социальные сети</Label>
+        </Space>
+      }
+    >
+      {mode === "edit" ? (
+        <Form layout="vertical" onFinish={handleSubmit(onSubmit)}>
+          <Row gutter={[16, 16]}>
+            <Col xs={24} lg={12}>
+              <Form.Item label="Название катка">
+                <Controller
+                  name="name"
+                  control={control}
+                  render={({ field }) => <Input {...field} />}
+                />
+              </Form.Item>
+              <Form.Item label="Адрес">
+                <Controller
+                  name="address"
+                  control={control}
+                  render={({ field }) => <Input {...field} />}
+                />
+              </Form.Item>
+              <Form.Item label="Район">
+                <Controller
+                  name="district"
+                  control={control}
+                  render={({ field }) => (
+                    <Select
+                      options={districtOptions}
+                      value={field.value}
+                      onChange={field.onChange}
+                    />
+                  )}
+                />
+              </Form.Item>
+              <Form.Item label="Станции метро">
+                <Input placeholder="Станции метро" />
+              </Form.Item>
+              <Form.Item label="Номера телефонов">
+                <Controller
+                  name="phones"
+                  control={control}
+                  render={({ field }) => <Input {...field} />}
+                />
+              </Form.Item>
+              <Form.Item label="Социальные сети">
+                <Space direction="vertical" style={{ width: "100%" }}>
                   {socials.map((_, index) => (
-                    <div key={index} className="flex gap-2">
-                      <Input placeholder="Название" className="w-1/3" />
-                      <Input placeholder="URL" className="w-2/3" />
-                    </div>
+                    <Space key={index} style={{ width: "100%" }}>
+                      <Input placeholder="Название" style={{ width: "33%" }} />
+                      <Input placeholder="URL" style={{ width: "67%" }} />
+                    </Space>
                   ))}
-                  <Button onClick={addSocial} variant="outline" size="sm" type="button">
-                    <Plus className="w-4 h-4 mr-1" /> Добавить
+                  <Button onClick={addSocial} icon={<Plus />} size="small">
+                    Добавить
                   </Button>
-                </div>
-              </div>
-
-              {/* Арены и сеансы */}
-              <div className="grid xs:grid-cols-1 lg:grid-cols-2 gap-4">
-                <div className="flex flex-col gap-2">
-                  <Label>Арены</Label>
-                  <Controller
-                    name="arenas"
-                    control={control}
-                    render={({ field }) => <Input {...field} />}
-                  />
-                </div>
-                <div className="flex flex-col gap-2">
-                  <Label>Типы сеансов</Label>
-                  <Controller
-                    name="sessionTypes"
-                    control={control}
-                    render={({ field }) => <Input {...field} />}
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className="w-full lg:w-1/2">
+                </Space>
+              </Form.Item>
+              <Form.Item label="Арены">
+                <Controller
+                  name="arenas"
+                  control={control}
+                  render={({ field }) => <Input {...field} />}
+                />
+              </Form.Item>
+              <Form.Item label="Типы сеансов">
+                <Controller
+                  name="sessionTypes"
+                  control={control}
+                  render={({ field }) => <Input {...field} />}
+                />
+              </Form.Item>
+            </Col>
+            <Col xs={24} lg={12}>
               <Map location={[60.036484, 30.306125]} />
-            </div>
-          </form>
-        ) : (
-          <div className="grid grid-cols-2 gap-4">
-            <Description title="Название катка" description="Озерки" />
-            <Description title="Адресс" description="Озерки" />
-            <Description title="Станции метро" description="Озерки" />
-            <Description title="Район" description="Озерки" />
-            <Description title="Номера телефонов" description="Озерки" />
-            <Description title="Социальные сети" description="Озерки" />
-          </div>
-        )}
-      </CardContent>
+            </Col>
+          </Row>
+        </Form>
+      ) : (
+        <Descriptions items={descriptionItems} column={{ xs: 1, sm: 1, md: 2 }} size="small" />
+      )}
     </Card>
   )
 }
