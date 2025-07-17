@@ -1,15 +1,35 @@
-import { configureStore } from "@reduxjs/toolkit"
+import { combineReducers, configureStore } from "@reduxjs/toolkit"
 import { rinksApi } from "./api/rink.api"
+import favoritesReducer from "./slice/favoritesSlice"
+import storage from "redux-persist/lib/storage"
+import { persistReducer, persistStore } from "redux-persist"
 
-export const makeStore = () => {
-  return configureStore({
-    reducer: {
-      [rinksApi.reducerPath]: rinksApi.reducer,
-    },
-    middleware: getDefaultMiddleware => getDefaultMiddleware().concat(rinksApi.middleware),
-  })
+const persistConfig = {
+  key: "root",
+  storage,
+  whitelist: ["favorites"],
 }
 
-export type AppStore = ReturnType<typeof makeStore>
-export type RootState = ReturnType<AppStore["getState"]>
-export type AppDispatch = AppStore["dispatch"]
+const rootReducer = combineReducers({
+  favorites: favoritesReducer,
+  [rinksApi.reducerPath]: rinksApi.reducer,
+})
+
+const persistedReducer = persistReducer(persistConfig, rootReducer)
+
+export const store = configureStore({
+  reducer: persistedReducer,
+  middleware: getDefaultMiddleware =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: ["persist/PERSIST", "persist/REHYDRATE"],
+      },
+    }).concat(rinksApi.middleware),
+  devTools: process.env.NODE_ENV !== "production",
+})
+
+export const persistor = persistStore(store)
+
+export type AppStore = typeof store
+export type RootState = ReturnType<typeof store.getState>
+export type AppDispatch = typeof store.dispatch

@@ -3,23 +3,26 @@
 import { Heart } from "lucide-react"
 import { Button, notification, Tooltip } from "antd"
 import { useMemo } from "react"
-import { useFavorites } from "@/lib/hooks/useFavorites"
+import { useAppDispatch, useAppSelector } from "@/redux/hooks"
+import { addFavorite, removeFavorite } from "@/redux/slice/favoritesSlice"
 
 type Props = {
   id: string
 }
 
 export function FavoriteButton({ id }: Props) {
-  const { isFavorite, add, remove } = useFavorites(id)
+  const dispatch = useAppDispatch()
+  const favorites = useAppSelector(state => state.favorites.ids)
+  const isFavorite = favorites.includes(id)
   const [api, contextHolder] = notification.useNotification()
 
   const handleClick = () => {
     if (isFavorite) {
-      remove()
-      api.info({ message: "Каток удалён из избранного", duration: 5, key: "favorite-toast" })
+      dispatch(removeFavorite(id))
+      api.success({ message: "Каток удалён из избранного", duration: 3, key: "favorite-toast" })
     } else {
-      add()
-      api.success({ message: "Каток добавлен в избранное", duration: 5, key: "favorite-toast" })
+      dispatch(addFavorite(id))
+      api.success({ message: "Каток добавлен в избранное", duration: 3, key: "favorite-toast" })
     }
   }
 
