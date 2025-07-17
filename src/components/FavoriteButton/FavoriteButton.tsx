@@ -1,49 +1,39 @@
 "use client"
 
 import { Heart } from "lucide-react"
-import { Button, Tooltip, notification } from "antd"
-import { useState } from "react"
+import { Button, notification, Tooltip } from "antd"
+import { useMemo } from "react"
+import { useFavorites } from "@/lib/hooks/useFavorites"
 
-export function FavoriteButton({ isFavorite: initial }: { isFavorite: boolean }) {
-  const [isFavorite, setIsFavorite] = useState(initial)
+type Props = {
+  id: string
+}
+
+export function FavoriteButton({ id }: Props) {
+  const { isFavorite, add, remove } = useFavorites(id)
   const [api, contextHolder] = notification.useNotification()
 
   const handleClick = () => {
-    const prev = isFavorite
-    const next = !isFavorite
-    setIsFavorite(next)
-
-    api.error({
-      message: next ? "Каток добавлен в избранное" : "Каток удалён",
-      duration: 5,
-      key: "favorite-toast",
-      actions: (
-        <Button
-          type="link"
-          size="small"
-          onClick={() => {
-            setIsFavorite(prev)
-            api.destroy("favorite-toast")
-          }}
-        >
-          Отменить
-        </Button>
-      ),
-      showProgress: true,
-      pauseOnHover: true,
-    })
+    if (isFavorite) {
+      remove()
+      api.info({ message: "Каток удалён из избранного", duration: 5, key: "favorite-toast" })
+    } else {
+      add()
+      api.success({ message: "Каток добавлен в избранное", duration: 5, key: "favorite-toast" })
+    }
   }
 
+  const icon = useMemo(
+    () => <Heart className={isFavorite ? "fill-primary stroke-transparent" : "stroke-slate-400"} />,
+    [isFavorite]
+  )
+
   return (
-    <Tooltip title={isFavorite ? "Удалить из избранного" : "Добавить в избранное"}>
-      <Button
-        type="text"
-        icon={
-          <Heart className={isFavorite ? "fill-primary stroke-transparent" : "stroke-slate-400"} />
-        }
-        onClick={handleClick}
-      />
+    <>
       {contextHolder}
-    </Tooltip>
+      <Tooltip title={isFavorite ? "Удалить из избранного" : "Добавить в избранное"}>
+        <Button type="text" icon={icon} onClick={handleClick} />
+      </Tooltip>
+    </>
   )
 }

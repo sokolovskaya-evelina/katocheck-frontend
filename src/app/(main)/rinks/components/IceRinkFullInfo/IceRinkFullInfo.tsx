@@ -1,12 +1,13 @@
 import Image from "next/image"
-import { Button, Card, Divider, Flex, Space } from "antd"
-import { Heart, Map, MapPin, Phone, Train } from "lucide-react"
+import { Card, Divider, Flex, Space } from "antd"
+import { Map, MapPin, Phone, Train } from "lucide-react"
 import { FaFacebook, FaGlobe, FaInstagram, FaTelegramPlane, FaVk } from "react-icons/fa"
 import { MetroStations } from "@/components/MetroStation/MetroStations"
 import { RinkType } from "@/types/types"
 import Text from "antd/es/typography/Text"
 import Title from "antd/es/typography/Title"
 import TextLink from "antd/es/typography/Link"
+import { FavoriteButton } from "@/components/FavoriteButton/FavoriteButton"
 
 const getSocialIcon = (name: string) => {
   switch (name.toLowerCase()) {
@@ -42,7 +43,7 @@ export default function IceRinkFullInfo({ rink }: Props) {
         />
       }
     >
-      <div className="flex flex-col md:flex-row justify-between gap-6 px-6 pb-6">
+      <div className="flex justify-between gap-6 px-6 pb-6">
         <Flex vertical gap={8} className="max-w-full">
           <Title level={3}>{rink.name}</Title>
 
@@ -99,19 +100,7 @@ export default function IceRinkFullInfo({ rink }: Props) {
             </Space>
           )}
         </Flex>
-
-        <Button
-          className="w-full md:w-auto"
-          type="default"
-          iconPosition="end"
-          icon={
-            <Heart
-              className={rink.isFavorite ? "fill-primary stroke-transparent" : "stroke-slate-500"}
-            />
-          }
-        >
-          Добавить в избранное
-        </Button>
+        <FavoriteButton id={rink.rinkId} />
       </div>
     </Card>
   )

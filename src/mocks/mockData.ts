@@ -95,7 +95,6 @@ export const mockRink: RinkType = {
     },
   ],
   location: [60.037, 30.331],
-  isFavorite: true,
   schedule: [
     {
       date: "2025-06-29",
@@ -271,7 +270,6 @@ export const mockRinks: RinkShortInfoType[] = [
   {
     rinkId: "fa70de71-d9bb-4c4a-a05a-222a95960996",
     name: "Каток #1",
-    isFavorite: false,
     address: "г. Санкт-Петербург, улица Ленина, д. 9",
     metroStations: [MetroStationEnum.OZERKI],
     schedule: [],
@@ -279,7 +277,6 @@ export const mockRinks: RinkShortInfoType[] = [
   {
     rinkId: "107a9dc8-2dcc-43fe-a831-7009c7934030",
     name: "Каток #2",
-    isFavorite: false,
     address: "г. Санкт-Петербург, улица Ленина, д. 44",
     metroStations: [MetroStationEnum.OZERKI],
     schedule: [
@@ -333,7 +330,6 @@ export const mockRinks: RinkShortInfoType[] = [
   {
     rinkId: "6df5b354-22a5-4a99-bf84-9ef0a982196b",
     name: "Каток #3",
-    isFavorite: true,
     address: "г. Санкт-Петербург, улица Парковая, д. 44",
     metroStations: [MetroStationEnum.DEVYATKINO],
     schedule: [
@@ -399,7 +395,6 @@ export const mockRinks: RinkShortInfoType[] = [
   {
     rinkId: "6367cd53-976f-42bd-b784-b0f60aa125a1",
     name: "Каток #4",
-    isFavorite: false,
     address: "г. Санкт-Петербург, улица Ленина, д. 17",
     metroStations: [MetroStationEnum.BEGOVAYA],
     schedule: [
@@ -447,7 +442,6 @@ export const mockRinks: RinkShortInfoType[] = [
   {
     rinkId: "12dcc831-4d8e-477c-a549-8f0adeed6be7",
     name: "Каток #5",
-    isFavorite: true,
     address: "г. Санкт-Петербург, улица Советская, д. 34",
     metroStations: [MetroStationEnum.SPASSKAYA],
     schedule: [
@@ -519,7 +513,6 @@ export const mockRinks: RinkShortInfoType[] = [
   {
     rinkId: "115037ff-bb94-4fe5-abe7-536406714fed",
     name: "Каток #6",
-    isFavorite: false,
     address: "г. Санкт-Петербург, улица Советская, д. 44",
     metroStations: [MetroStationEnum.STARAYA_DEREVNYA],
     schedule: [
@@ -573,7 +566,6 @@ export const mockRinks: RinkShortInfoType[] = [
   {
     rinkId: "018946ac-cb24-443a-915a-26f72f65de7a",
     name: "Каток #7",
-    isFavorite: false,
     address: "г. Санкт-Петербург, улица Парковая, д. 2",
     metroStations: [],
     district: DistrictEnum.ADMIRALTEYSKY,
@@ -634,7 +626,6 @@ export const mockRinks: RinkShortInfoType[] = [
   {
     rinkId: "8a63858f-214b-4494-b5c2-33c1e53eb833",
     name: "Каток #8",
-    isFavorite: true,
     address: "г. Санкт-Петербург, улица Ленина, д. 25",
     metroStations: [],
     district: DistrictEnum.KIROVSKY,
@@ -689,7 +680,6 @@ export const mockRinks: RinkShortInfoType[] = [
   {
     rinkId: "d0306574-9101-46d2-957b-5124a333aba7",
     name: "Каток #9",
-    isFavorite: false,
     address: "г. Санкт-Петербург, улица Парковая, д. 24",
     metroStations: [],
     district: DistrictEnum.KRASNOGVARDEYSKY,
@@ -756,7 +746,6 @@ export const mockRinks: RinkShortInfoType[] = [
   {
     rinkId: "76b682bb-e91f-44c6-b027-c27b59f1f730",
     name: "Каток #10",
-    isFavorite: false,
     address: "г. Санкт-Петербург, улица Ленина, д. 11",
     metroStations: [],
     district: DistrictEnum.VYBORGSKY,

@@ -1,11 +1,12 @@
-import { Badge, Button, Collapse, Flex } from "antd"
-import { CalendarIcon, Heart } from "lucide-react"
+import { Badge, Collapse, Flex } from "antd"
+import { CalendarIcon } from "lucide-react"
 import Link from "next/link"
 import { MetroStations } from "@/components/MetroStation/MetroStations"
 import { ScheduleItemType, ScheduleType } from "@/types/types"
 import dayjs from "@/lib/dayjs"
 import { mockSchedule } from "@/mocks/mockData"
 import Text from "antd/es/typography/Text"
+import { FavoriteButton } from "@/components/FavoriteButton/FavoriteButton"
 
 const Schedule = () => {
   const items = mockSchedule.map((data: ScheduleType<ScheduleItemType>) => ({
@@ -43,16 +44,7 @@ const Schedule = () => {
                   style={{ color: "#595959", backgroundColor: "#f5f5f5" }}
                 />
               </Flex>
-              <Button
-                type="text"
-                icon={
-                  <Heart
-                    className={
-                      item.favorite ? "fill-primary stroke-transparent" : "stroke-slate-400"
-                    }
-                  />
-                }
-              />
+              <FavoriteButton id={item.rinkId} />
             </Flex>
           </Flex>
         ))}

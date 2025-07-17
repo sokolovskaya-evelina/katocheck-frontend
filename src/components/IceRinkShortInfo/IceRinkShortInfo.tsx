@@ -16,7 +16,7 @@ export default function IceRinkShortInfo({ rink }: { rink: RinkShortInfoType }) 
           <Link href={`/rinks/${rink.rinkId}`}>{rink.name}</Link>
         </Text>
       }
-      extra={<FavoriteButton isFavorite={rink.isFavorite} />}
+      extra={<FavoriteButton id={rink.rinkId} />}
     >
       <Flex vertical gap={5}>
         <Flex align="center" gap={5}>

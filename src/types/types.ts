@@ -32,11 +32,10 @@ export type RinkType = {
   phones: string[]
   socials: { name: string; url: string }[]
   location: [number, number]
-  isFavorite: boolean
   schedule: ScheduleType<ScheduleItemShortType>[]
 }
 
 export type RinkShortInfoType = Pick<
   RinkType,
-  "rinkId" | "name" | "isFavorite" | "address" | "metroStations" | "district" | "schedule"
+  "rinkId" | "name" | "address" | "metroStations" | "district" | "schedule"
 >
