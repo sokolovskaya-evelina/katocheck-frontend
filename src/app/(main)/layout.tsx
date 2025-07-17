@@ -19,7 +19,7 @@ export default function RootLayout({
     <Layout>
       <AppHeader />
       <Content>
-        <div className="max-w-screen-xl mx-auto py-4 min-h-[calc(100vh-64px-226px)]">
+        <div className="max-w-screen-xl mx-4 xl:mx-auto py-4 min-h-[calc(100vh-64px-226px)]">
           {children}
         </div>
       </Content>

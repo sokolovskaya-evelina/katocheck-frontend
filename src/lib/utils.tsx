@@ -1,7 +1,6 @@
 import { MetroStationEnum } from "@/types/enums"
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
-import { MultiSelectGroup } from "@/components/MultiSelect/MultiSelect"
 import { MetroStation } from "@/components/MetroStation/MetroStation"
 
 export function cn(...inputs: ClassValue[]) {
@@ -103,7 +102,7 @@ export function getMetroStationColor(station: MetroStationEnum): string {
   }
 }
 
-export function getMetroStationOptions(): MultiSelectGroup[] {
+export function getMetroStationOptions() {
   const groupMap: Record<string, MetroStationEnum[]> = {
     "Кировско-Выборгская": [
       MetroStationEnum.DEVYATKINO,
@@ -192,6 +191,7 @@ export function getMetroStationOptions(): MultiSelectGroup[] {
 
   return Object.entries(groupMap).map(([lineName, stations]) => ({
     label: lineName,
+    title: lineName,
     options: stations.map(station => ({
       value: station,
       label: <MetroStation name={station} indicatorPosition={"start"} />,

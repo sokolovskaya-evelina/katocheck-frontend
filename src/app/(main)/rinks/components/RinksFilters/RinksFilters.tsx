@@ -5,7 +5,7 @@ import { FilterBarItem, FilterState } from "@/components/FilterBar/types/filter.
 import Filters from "@/components/FilterBar/Filters"
 import { getMetroStationOptions } from "@/lib/utils"
 
-const ScheduleFilters = () => {
+const RinksFilters = () => {
   const [filters, setFilters] = useState<FilterState>({})
 
   const items: FilterBarItem[] = useMemo(
@@ -34,15 +34,6 @@ const ScheduleFilters = () => {
         maxTagCount: "responsive",
       },
       {
-        name: "sessionTypes",
-        type: "select",
-        label: "Вид сеанса",
-        allowClear: true,
-        options: [{ label: "Свободное катание", value: 1 }],
-        mode: "multiple",
-        maxTagCount: "responsive",
-      },
-      {
         name: "isFavorite",
         type: "select",
         label: "Избранное",
@@ -60,4 +51,4 @@ const ScheduleFilters = () => {
   return <Filters filters={filters} setFilters={setFilters} filterItems={items} />
 }
 
-export default ScheduleFilters
+export default RinksFilters
