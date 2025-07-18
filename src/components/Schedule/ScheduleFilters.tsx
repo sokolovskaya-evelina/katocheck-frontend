@@ -1,12 +1,17 @@
 "use client"
 
-import { useMemo, useState } from "react"
+import { useCallback, useMemo } from "react"
 import { FilterBarItem, FilterState } from "@/components/FilterBar/types/filter.types"
 import Filters from "@/components/FilterBar/Filters"
 import { getMetroStationOptions } from "@/lib/utils"
+import { resetScheduleFilters, setScheduleFilters } from "@/redux/slice/filtersSlice"
+import { RinksFiltersType } from "@/types/types"
+import { useAppDispatch, useAppSelector } from "@/redux/hooks"
+import { FavoritesEnum } from "@/types/enums"
 
 const ScheduleFilters = () => {
-  const [filters, setFilters] = useState<FilterState>({})
+  const dispatch = useAppDispatch()
+  const filters = useAppSelector(state => state.filters.schedule)
 
   const items: FilterBarItem[] = useMemo(
     () => [
@@ -46,18 +51,32 @@ const ScheduleFilters = () => {
         name: "isFavorite",
         type: "select",
         label: "Избранное",
-        defaultValue: "all",
+        defaultValue: FavoritesEnum.All,
         options: [
-          { label: "Все", value: "all" },
-          { label: "Только избранное", value: "isFavorite" },
+          { label: "Все", value: FavoritesEnum.All },
+          { label: "Только избранное", value: FavoritesEnum.Favorites },
         ],
-        maxTagCount: "responsive",
       },
     ],
     []
   )
 
-  return <Filters filters={filters} setFilters={setFilters} filterItems={items} />
+  const handleSetFilters = useCallback((newFilters: FilterState) => {
+    dispatch(setScheduleFilters(newFilters as RinksFiltersType))
+  }, [])
+
+  const handleResetFilters = useCallback(() => {
+    dispatch(resetScheduleFilters())
+  }, [])
+
+  return (
+    <Filters
+      filters={filters}
+      setFilters={handleSetFilters}
+      resetFilters={handleResetFilters}
+      filterItems={items}
+    />
+  )
 }
 
 export default ScheduleFilters

@@ -1,17 +1,19 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit"
 import { rinksApi } from "./api/rink.api"
 import favoritesReducer from "./slice/favoritesSlice"
+import filtersReducer from "./slice/filtersSlice"
 import storage from "redux-persist/lib/storage"
 import { persistReducer, persistStore } from "redux-persist"
 
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["favorites"],
+  whitelist: ["favorites", "filters"],
 }
 
 const rootReducer = combineReducers({
   favorites: favoritesReducer,
+  filters: filtersReducer,
   [rinksApi.reducerPath]: rinksApi.reducer,
 })
 

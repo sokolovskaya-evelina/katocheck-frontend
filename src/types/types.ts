@@ -1,4 +1,4 @@
-import { DistrictEnum, MetroStationEnum } from "@/types/enums"
+import { DistrictEnum, FavoritesEnum, MetroStationEnum } from "@/types/enums"
 
 export type ScheduleItemType = {
   rinkId: string
@@ -39,3 +39,19 @@ export type RinkShortInfoType = Pick<
   RinkType,
   "rinkId" | "name" | "address" | "metroStations" | "district" | "schedule"
 >
+
+type Favorites = FavoritesEnum.All | FavoritesEnum.Favorites
+
+export type ScheduleFiltersType = {
+  rinkIds?: string[]
+  metroStations?: MetroStationEnum[]
+  sessionTypes?: string[]
+  districts?: string[]
+  favorites: Favorites
+}
+
+export type RinksFiltersType = {
+  rinkIds?: string[]
+  metroStations?: MetroStationEnum[]
+  favorites: Favorites
+}

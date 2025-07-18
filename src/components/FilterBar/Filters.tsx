@@ -9,20 +9,40 @@ import { ListFilter } from "lucide-react"
 type Props = {
   filters: FilterState
   setFilters: (filters: FilterState) => void
+  resetFilters: () => void
   filterItems: FilterBarItem[]
 }
 
-const Filters = ({ filters, setFilters, filterItems }: Props) => {
+const Filters = ({ filters, setFilters, filterItems, resetFilters }: Props) => {
   const [open, setOpen] = useState(false)
+  const [pendingFilters, setPendingFilters] = useState<FilterState>(filters)
 
-  const handleCancel = () => setOpen(false)
+  const handleCancel = () => {
+    setOpen(false)
+    setPendingFilters(filters) // сброс временных фильтров
+  }
+
+  const handleApply = () => {
+    setFilters(pendingFilters)
+    setOpen(false)
+  }
+
+  const handleReset = () => {
+    setPendingFilters({})
+    resetFilters()
+  }
 
   return (
     <>
       <div className="hidden lg:block max-w-screen-xl mx-auto w-full">
         <Card>
           <Flex align="end" gap={15}>
-            <FilterBar filterValues={filters} onFilterChange={setFilters} items={filterItems} />
+            <FilterBar
+              filterValues={filters}
+              onFilterChange={setFilters}
+              onFilterReset={resetFilters}
+              items={filterItems}
+            />
           </Flex>
         </Card>
       </div>
@@ -36,16 +56,17 @@ const Filters = ({ filters, setFilters, filterItems }: Props) => {
       <Modal title="Фильтры" open={open} footer={false} onCancel={handleCancel}>
         <Flex vertical gap={15} className="w-full">
           <FilterBar
-            filterValues={filters}
-            onFilterChange={setFilters}
+            filterValues={pendingFilters}
+            onFilterChange={setPendingFilters}
+            onFilterReset={resetFilters}
             items={filterItems}
             showResetBtn={false}
           />
           <Flex justify="space-between">
-            <Button onClick={() => setFilters({})}>Сбросить фильтры</Button>
+            <Button onClick={handleReset}>Сбросить фильтры</Button>
             <Flex gap={15}>
               <Button onClick={handleCancel}>Закрыть</Button>
-              <Button type="primary" onClick={handleCancel}>
+              <Button type="primary" onClick={handleApply}>
                 Применить
               </Button>
             </Flex>

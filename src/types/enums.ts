@@ -1,3 +1,8 @@
+export enum FavoritesEnum {
+  All = "ALL",
+  Favorites = "FAVORITES",
+}
+
 export enum MetroStationEnum {
   // Линия 1 — Кировско-Выборгская
   DEVYATKINO = "Девяткино",
