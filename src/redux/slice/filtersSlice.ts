@@ -1,6 +1,7 @@
 import { RinksFiltersType, ScheduleFiltersType } from "@/types/types"
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { FavoritesEnum } from "@/types/enums"
+import dayjs from "@/lib/dayjs"
 
 type FiltersState = {
   schedule: ScheduleFiltersType
@@ -13,6 +14,8 @@ const initialState: FiltersState = {
   },
   schedule: {
     favorites: FavoritesEnum.All,
+    dateRange: [dayjs().toISOString(), dayjs().add(7, "days").toISOString()],
+    timeRange: [dayjs().startOf("day").toISOString(), dayjs().endOf("day").toISOString()],
   },
 }
 
@@ -25,7 +28,6 @@ export const filtersSlice = createSlice({
     },
     resetScheduleFilters: state => ({ ...state, schedule: { favorites: FavoritesEnum.All } }),
     setRinksFilters: (state, action: PayloadAction<RinksFiltersType>) => {
-      console.log(action.payload)
       state.rinks = { ...state.rinks, ...action.payload }
     },
     resetRinksFilters: state => ({ ...state, rinks: { favorites: FavoritesEnum.All } }),

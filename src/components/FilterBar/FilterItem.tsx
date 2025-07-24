@@ -3,6 +3,8 @@ import Input, { InputProps } from "antd/es/input"
 import InputNumber, { InputNumberProps } from "antd/es/input-number"
 import Select, { SelectProps } from "antd/es/select"
 import { FilterBarItem } from "./types/filter.types"
+import TimePicker, { TimeRangePickerProps } from "antd/es/time-picker"
+import dayjs from "@/lib/dayjs"
 
 interface FilterItemProps {
   item: FilterBarItem
@@ -24,6 +26,12 @@ export function FilterItem({ item, value, onChange }: FilterItemProps) {
     ...(type === "text" && {
       onChange: (e: any) => onChange(e.target.value ? e.target.value : undefined),
     }),
+    ...(type === "time-range" && {
+      value: [dayjs(value[0]), dayjs(value[1])],
+    }),
+    ...(type === "date-range" && {
+      value: [dayjs(value[0]), dayjs(value[1])],
+    }),
   }
 
   const components = {
@@ -32,6 +40,7 @@ export function FilterItem({ item, value, onChange }: FilterItemProps) {
     select: <Select {...(props as SelectProps)} {...commonProps} />,
     date: <DatePicker {...(props as DatePickerProps)} {...commonProps} />,
     "date-range": <DatePicker.RangePicker {...(props as RangePickerProps)} {...commonProps} />,
+    "time-range": <TimePicker.RangePicker {...(props as TimeRangePickerProps)} {...commonProps} />,
   }
 
   return components[type]

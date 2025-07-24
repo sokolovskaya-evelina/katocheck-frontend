@@ -5,9 +5,10 @@ import { FilterBarItem, FilterState } from "@/components/FilterBar/types/filter.
 import Filters from "@/components/FilterBar/Filters"
 import { getMetroStationOptions } from "@/lib/utils"
 import { resetScheduleFilters, setScheduleFilters } from "@/redux/slice/filtersSlice"
-import { RinksFiltersType } from "@/types/types"
+import { ScheduleFiltersType } from "@/types/types"
 import { useAppDispatch, useAppSelector } from "@/redux/hooks"
 import { FavoritesEnum } from "@/types/enums"
+import dayjs from "dayjs"
 
 const ScheduleFilters = () => {
   const dispatch = useAppDispatch()
@@ -15,6 +16,23 @@ const ScheduleFilters = () => {
 
   const items: FilterBarItem[] = useMemo(
     () => [
+      {
+        name: "dateRange",
+        type: "date-range",
+        label: "Дата",
+        format: "DD.MM",
+        minDate: dayjs(),
+        maxDate: dayjs().endOf("year"),
+        allowClear: false,
+      },
+      {
+        name: "timeRange",
+        type: "time-range",
+        label: "Время сеансов",
+        format: "HH:mm",
+        needConfirm: false,
+        allowClear: false,
+      },
       {
         name: "rinkIds",
         type: "select",
@@ -62,7 +80,16 @@ const ScheduleFilters = () => {
   )
 
   const handleSetFilters = useCallback((newFilters: FilterState) => {
-    dispatch(setScheduleFilters(newFilters as RinksFiltersType))
+    const { dateRange, timeRange, ...rest } = newFilters
+
+    1
+    dispatch(
+      setScheduleFilters({
+        dateRange: [dayjs(dateRange[0]).toISOString(), dayjs(dateRange[1]).toISOString()],
+        timeRange: [dayjs(timeRange[0]).toISOString(), dayjs(timeRange[1]).toISOString()],
+        ...rest,
+      } as ScheduleFiltersType)
+    )
   }, [])
 
   const handleResetFilters = useCallback(() => {

@@ -33,7 +33,7 @@ const Schedule = () => {
               </Text>
               {item.metroStations && <MetroStations metroStations={item.metroStations} />}
             </Flex>
-            <Flex align="center" gap={10}>
+            <Flex align="start" gap={10}>
               <Flex vertical align="end" gap={5}>
                 <Text>
                   {dayjs(item.startTime).format("HH:mm")}–{dayjs(item.endTime).format("HH:mm")}

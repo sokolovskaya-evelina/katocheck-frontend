@@ -48,6 +48,8 @@ export type ScheduleFiltersType = {
   sessionTypes?: string[]
   districts?: string[]
   favorites: Favorites
+  dateRange?: [string, string]
+  timeRange?: [string, string]
 }
 
 export type RinksFiltersType = {
