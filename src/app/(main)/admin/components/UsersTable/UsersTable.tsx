@@ -6,16 +6,16 @@ import { Pencil, Save, Snowflake, Trash, X } from "lucide-react"
 import type { ColumnsType } from "antd/es/table"
 import useBreakpoint from "antd/es/grid/hooks/useBreakpoint"
 import Password from "antd/es/input/Password"
-import { UserEnum } from "@/types/enums"
-import { translateUserType } from "@/app/(main)/admin/utils/enum.translationts"
+import { translateRole } from "@/app/(main)/admin/utils/enum.translationts"
 import NewUserModal from "@/app/(main)/admin/components/NewUserModal/NewUserModal"
+import { RoleEnum } from "@/types/enums"
 
 export type RinkItemType = {
   rinkId: string
   name: string
   login: string
   password: string
-  userType: UserEnum
+  role: RoleEnum
   isActive: boolean
 }
 
@@ -26,7 +26,7 @@ const initialData: RinkItemType[] = [
     login: "ozerki123",
     password: "123",
     isActive: true,
-    userType: UserEnum.Sportsman,
+    role: RoleEnum.Sportsman,
   },
   {
     rinkId: "0",
@@ -34,7 +34,7 @@ const initialData: RinkItemType[] = [
     login: "magnit",
     password: "13245",
     isActive: false,
-    userType: UserEnum.Coach,
+    role: RoleEnum.Coach,
   },
 ]
 
@@ -126,15 +126,15 @@ export default function UserTable() {
         isEditing(record) ? (
           <Select
             options={[
-              { value: UserEnum.Sportsman, label: "Спортсмен" },
-              { value: UserEnum.Coach, label: "Тренер" },
-              { value: UserEnum.Parent, label: "Родитель" },
+              { value: RoleEnum.Sportsman, label: "Спортсмен" },
+              { value: RoleEnum.Coach, label: "Тренер" },
+              { value: RoleEnum.Parent, label: "Родитель" },
             ]}
-            value={editedData[record.rinkId]?.userType ?? value}
-            onChange={e => handleInputChange(record.rinkId, "userType", e)}
+            value={editedData[record.rinkId]?.role ?? value}
+            onChange={e => handleInputChange(record.rinkId, "role", e)}
           />
         ) : (
-          translateUserType(value)
+          translateRole(value)
         ),
     },
     {

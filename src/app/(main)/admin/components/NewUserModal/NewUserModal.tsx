@@ -6,13 +6,13 @@ import Password from "antd/es/input/Password"
 import Modal from "antd/es/modal/Modal"
 import FormItem from "antd/es/form/FormItem"
 import Input from "antd/es/input/Input"
-import { UserEnum } from "@/types/enums"
+import { RoleEnum } from "@/types/enums"
 
 type FieldType = {
   name?: string
   login?: string
   password?: string
-  userType: UserEnum
+  userType: RoleEnum
 }
 
 type Props = {
@@ -42,7 +42,7 @@ export default function NewUserModal({ open, setOpen }: Props) {
         layout="vertical"
         onFinish={handleSubmit}
         autoComplete="off"
-        initialValues={{ userType: UserEnum.Sportsman }}
+        initialValues={{ userType: RoleEnum.Sportsman }}
       >
         <FormItem<FieldType>
           label="Имя"
@@ -71,9 +71,9 @@ export default function NewUserModal({ open, setOpen }: Props) {
         <FormItem<FieldType> label="Тип" name="userType">
           <Select
             options={[
-              { value: UserEnum.Sportsman, label: "Спортсмен" },
-              { value: UserEnum.Coach, label: "Тренер" },
-              { value: UserEnum.Parent, label: "Родитель" },
+              { value: RoleEnum.Sportsman, label: "Спортсмен" },
+              { value: RoleEnum.Coach, label: "Тренер" },
+              { value: RoleEnum.Parent, label: "Родитель" },
             ]}
           />
         </FormItem>

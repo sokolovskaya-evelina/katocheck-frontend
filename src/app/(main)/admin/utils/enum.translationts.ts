@@ -1,16 +1,11 @@
-import { RoleEnum, UserEnum } from "@/types/enums"
+import { RoleEnum } from "@/types/enums"
 
 export function translateRole(role: RoleEnum) {
   return {
     [RoleEnum.Admin]: "Администратор",
     [RoleEnum.SuperAdmin]: "Суперадмин",
+    [RoleEnum.Sportsman]: "Спортсмен",
+    [RoleEnum.Coach]: "Тренер",
+    [RoleEnum.Parent]: "Родитель",
   }[role]
-}
-
-export function translateUserType(type: UserEnum) {
-  return {
-    [UserEnum.Sportsman]: "Спортсмен",
-    [UserEnum.Coach]: "Тренер",
-    [UserEnum.Parent]: "Родитель",
-  }[type]
 }

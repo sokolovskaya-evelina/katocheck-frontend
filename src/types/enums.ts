@@ -6,9 +6,6 @@ export enum FavoritesEnum {
 export enum RoleEnum {
   Admin = "ADMIN",
   SuperAdmin = "SUPER_ADMIN",
-}
-
-export enum UserEnum {
   Sportsman = "SPORTSMAN",
   Parent = "PARENT",
   Coach = "COACH",
