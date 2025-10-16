@@ -3,6 +3,17 @@ export enum FavoritesEnum {
   Favorites = "FAVORITES",
 }
 
+export enum RoleEnum {
+  Admin = "ADMIN",
+  SuperAdmin = "SUPER_ADMIN",
+}
+
+export enum UserEnum {
+  Sportsman = "SPORTSMAN",
+  Parent = "PARENT",
+  Coach = "COACH",
+}
+
 export enum MetroStationEnum {
   // Линия 1 — Кировско-Выборгская
   DEVYATKINO = "Девяткино",
