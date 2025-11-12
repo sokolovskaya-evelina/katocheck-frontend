@@ -19,7 +19,7 @@ const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = errorInfo => {
   console.log("Failed:", errorInfo)
 }
 
-export default function LoginPage() {
+export default function Page() {
   return (
     <div className="h-screen flex items-center justify-center">
       <Card title="Вход" className="w-full max-w-sm p-6 space-y-4 text-center">

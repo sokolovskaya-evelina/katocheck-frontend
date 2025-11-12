@@ -1,9 +1,9 @@
 import type { Metadata } from "next"
 import { ReactNode } from "react"
-import { AppHeader } from "@/components/Header/AppHeader"
+import { Header } from "@/app/ui/common/header/app-header"
 import { Layout } from "antd"
 import { Content } from "antd/es/layout/layout"
-import { AppFooter } from "@/components/Footer/AppFooter"
+import { AppFooter } from "@/app/ui/common/footer/app-footer"
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -17,7 +17,7 @@ export default function RootLayout({
 }>) {
   return (
     <Layout>
-      <AppHeader />
+      <Header />
       <Content>
         <div className="max-w-screen-xl mx-4 xl:mx-auto py-4 min-h-[calc(100vh-64px-226px)]">
           {children}

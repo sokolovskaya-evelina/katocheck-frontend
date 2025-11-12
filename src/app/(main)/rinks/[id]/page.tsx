@@ -1,7 +1,7 @@
-import Map from "../components/Map/Map"
-import IceRinkFullInfo from "./../components/IceRinkFullInfo/IceRinkFullInfo"
+import Map from "@/app/ui/rinks/map"
+import IceRinkFullInfo from "@/app/ui/rinks/ice-rink-full-info"
 import { mockRink } from "@/mocks/mockData"
-import { RinkScheduleAccordion } from "./../components/RinkScheduleAccordion/RinkScheduleAccordion"
+import { RinkScheduleAccordion } from "@/app/ui/rinks/rink-schedule-accordion"
 import { Card, Flex } from "antd"
 
 export default function Page() {

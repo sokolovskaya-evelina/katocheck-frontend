@@ -1,7 +1,7 @@
-import IceRinkShortInfo from "@/components/IceRinkShortInfo/IceRinkShortInfo"
+import IceRinkShortInfo from "@/app/ui/rinks/ice-rink-short-info"
 import { mockRinks } from "@/mocks/mockData"
 import { Row, Col, Flex } from "antd"
-import RinksFilters from "./components/RinksFilters/RinksFilters"
+import RinksFilters from "@/app/ui/rinks/rinks-filters"
 
 export default function Page() {
   return (

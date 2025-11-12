@@ -1,8 +1,8 @@
-import ScheduleFilters from "@/components/Schedule/ScheduleFilters"
-import Schedule from "@/components/Schedule/Schedule"
+import ScheduleFilters from "@/app/ui/schedule/schedule-filters"
+import Schedule from "@/app/ui/schedule/schedule"
 import { Flex } from "antd"
 
-const Home = () => {
+export default function Page() {
   return (
     <Flex vertical gap={15}>
       <ScheduleFilters />
@@ -10,5 +10,3 @@ const Home = () => {
     </Flex>
   )
 }
-
-export default Home

@@ -1,5 +1,5 @@
-import { RinkShortInfoType, RinkType, ScheduleItemType, ScheduleType } from "@/types/types"
-import { DistrictEnum, MetroStationEnum } from "@/types/enums"
+import { RinkShortInfoType, RinkType, ScheduleItemType, ScheduleType } from "@/app/types/types"
+import { DistrictEnum, MetroStationEnum } from "@/app/types/enums"
 
 export const mockSchedule: ScheduleType<ScheduleItemType>[] = [
   {

@@ -2,15 +2,15 @@
 
 import { Button, Card, Space, Tabs } from "antd"
 import { Eye } from "lucide-react"
-import Info from "./components/Info/Info"
-import SkatingScheduleTable from "./components/ScheduleTable/ScheduleTable"
+import Info from "@/app/ui/admin/info"
+import SkatingScheduleTable from "@/app/ui/admin/schedule-table"
 import Title from "antd/es/typography/Title"
 import Text from "antd/es/typography/Text"
-import RinksTable from "@/app/(main)/admin/components/RinksTable/RinksTable"
-import UsersTable from "@/app/(main)/admin/components/UsersTable/UsersTable"
-import { RoleEnum } from "@/types/enums"
+import RinksTable from "@/app/ui/admin/rinks-table"
+import UsersTable from "@/app/ui/admin/users-table"
+import { RoleEnum } from "@/app/types/enums"
 
-export default function AdminPage() {
+export default function Page() {
   const userRole: RoleEnum = RoleEnum.SuperAdmin
 
   return (
