@@ -14,18 +14,200 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+/**
+ * ==========================
+ * MODELS
+ * ==========================
+ */
+
+// Пользователь
 model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
-  posts Post[]
+  id        String   @id @default(cuid())
+  email     String   @unique // логин
+  username  String // отображаемое имя
+  password  String
+  role      UserRole
+  isActive  Boolean  @default(true)
+  sessions Session[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // связь с катком (если этот пользователь — менеджер)
+  iceRinkId String?
+  iceRink   IceRink? @relation("IceRinkManagers", fields: [iceRinkId], references: [id])
+
+  @@map("users")
 }
 
-model Post {
-  id        Int     @id @default(autoincrement())
-  title     String
-  content   String?
-  published Boolean @default(false)
-  authorId  Int
-  author    User    @relation(fields: [authorId], references: [id])
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Каток
+model IceRink {
+  id        String      @id @default(cuid())
+  name      String
+  address   String
+  district  District?
+  website   String?
+  email     String?
+  type      IceRinkType @default(INDOOR)
+  latitude  Float?
+  longitude Float?
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  // менеджер
+
+  metroStations IceRinkMetro[]
+  phones        Phone[]
+  socialLinks   SocialLink[]
+  arenas        Arena[]
+  sessionTypes  SessionType[]
+  schedules     Schedule[]
+
+  managers User[] @relation("IceRinkManagers")
+
+  @@map("ice_rinks")
+}
+
+// Связь Каток ←→ Метро
+model IceRinkMetro {
+  id        String       @id @default(cuid())
+  iceRink   IceRink      @relation(fields: [iceRinkId], references: [id])
+  iceRinkId String
+  station   MetroStation
+
+  @@unique([iceRinkId, station])
+  @@map("ice_rink_metro")
+}
+
+// Телефоны
+model Phone {
+  id        String  @id @default(cuid())
+  number    String
+  comment   String?
+  iceRink   IceRink @relation(fields: [iceRinkId], references: [id])
+  iceRinkId String
+
+  @@map("phones")
+}
+
+// Социальные сети
+model SocialLink {
+  id        String     @id @default(cuid())
+  type      SocialType
+  url       String
+  iceRink   IceRink    @relation(fields: [iceRinkId], references: [id])
+  iceRinkId String
+
+  @@map("social_links")
+}
+
+// Арены
+model Arena {
+  id        String  @id @default(cuid())
+  name      String
+  iceRink   IceRink @relation(fields: [iceRinkId], references: [id])
+  iceRinkId String
+
+  schedules Schedule[] // ← должно быть обязательно
+
+  @@map("arenas")
+}
+
+// Типы сеансов
+model SessionType {
+  id        String  @id @default(cuid())
+  name      String
+  iceRink   IceRink @relation(fields: [iceRinkId], references: [id])
+  iceRinkId String
+
+  schedules Schedule[]
+
+  @@map("session_types")
+}
+
+// Расписание
+model Schedule {
+  id String @id @default(cuid())
+
+  date        DateTime // дата сеанса (день)
+  startTime   DateTime // полноценный datetime
+  endTime     DateTime // полноценный datetime
+  isRecurring Boolean  @default(false)
+
+  iceRink   IceRink @relation(fields: [iceRinkId], references: [id])
+  iceRinkId String
+
+  arena   Arena  @relation(fields: [arenaId], references: [id])
+  arenaId String
+
+  sessionType   SessionType @relation(fields: [sessionTypeId], references: [id])
+  sessionTypeId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("schedules")
+}
+
+/**
+ * ==========================
+ * ENUMS
+ * ==========================
+ */
+
+enum UserRole {
+  SUPER_ADMIN
+  ADMIN
+  PARENT
+  CHILD
+  ATHLETE
+}
+
+enum District {
+  ADMIRALTEYSKY
+  VASILEOSTROVSKY
+  VYBORGSKY
+  KALININSKY
+  KIROVSKY
+  KOLPINSKY
+  KRASNOGVARDEYSKY
+  KRASNOSELSKY
+  KRONSTADTSKY
+  KURORTNY
+  MOSKOVSKY
+  NEVSKY
+  PETROGRADSKY
+  PETRODVORETSOVY
+  PRIMORSKY
+  PUSHKINSKY
+  FRUNZENSKY
+  CENTRALNY
+}
+
+enum MetroStation {
+  AVTOVO
+  AKADEMICHESKAYA
+  BALTISKAYA
+  // ... остальные
+}
+
+enum SocialType {
+  INSTAGRAM
+  TELEGRAM
+  VK
+}
+
+enum IceRinkType {
+  INDOOR
+  OUTDOOR
 }

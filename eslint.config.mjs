@@ -2,7 +2,6 @@ import { dirname } from "path"
 import { fileURLToPath } from "url"
 import { FlatCompat } from "@eslint/eslintrc"
 
-import tailwindcss from "eslint-plugin-tailwindcss"
 import react from "eslint-plugin-react"
 import importPlugin from "eslint-plugin-import"
 import prettier from "eslint-config-prettier"
@@ -18,7 +17,6 @@ export default [
   ...compat.extends("next/core-web-vitals", "next/typescript"),
   {
     plugins: {
-      tailwindcss,
       react,
       import: importPlugin,
     },
