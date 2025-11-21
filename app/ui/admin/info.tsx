@@ -2,11 +2,12 @@
 
 import { useMemo, useState } from "react"
 import { Button, Card, Form, Input, Select, Space, Row, Col, Descriptions } from "antd"
+import Title from "antd/es/typography/Title"
 import { Controller, useForm } from "react-hook-form"
 import { Plus, Save, SquarePen } from "lucide-react"
-import { DistrictEnum } from "../../types/enums"
 import Map from "../rinks/map"
-import Title from "antd/es/typography/Title"
+import {translateDistrict} from "@/app/lib/translations/admin/enum.translationts";
+import {DistrictEnum} from "@/app/types/enums";
 
 const descriptionItems = [
   { key: "name", label: "Название катка", children: "Озерки" },
@@ -34,7 +35,7 @@ export default function Info() {
   })
 
   const districtOptions = useMemo(() => {
-    return Object.values(DistrictEnum).map(district => ({ label: district, value: district }))
+    return Object.values(DistrictEnum).map((district: DistrictEnum) => ({ label: translateDistrict(district), value: district }))
   }, [])
 
   const addSocial = () => {

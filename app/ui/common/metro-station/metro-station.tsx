@@ -1,7 +1,8 @@
-import { getMetroStationColor } from "../../../lib/utils"
-import { MetroStationEnum } from "../../../types/enums"
+import { getMetroStationColor } from "@/app/lib/utils"
+import { MetroStationEnum } from "@/app/types/enums"
 import { Space } from "antd"
 import Text from "antd/es/typography/Text"
+import {translateMetroStation} from "@/app/lib/translations/admin/enum.translationts";
 
 type Props = {
   name: MetroStationEnum
@@ -14,7 +15,7 @@ export function MetroStation({ name, indicatorPosition = "start" }: Props) {
   return (
     <Space direction="horizontal" className={`flex items-baseline gap-1 flex-${direction}`}>
       <div className={`w-2 h-2 rounded-full ${getMetroStationColor(name)}`} />
-      <Text>{name}</Text>
+      <Text>{translateMetroStation(name)}</Text>
     </Space>
   )
 }

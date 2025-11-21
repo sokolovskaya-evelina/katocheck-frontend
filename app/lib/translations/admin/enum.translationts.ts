@@ -1,4 +1,4 @@
-import { RoleEnum } from "../../../types/enums"
+import {DistrictEnum, MetroStationEnum, RinkTypeEnum, RoleEnum} from "@/app/types/enums";
 
 export function translateRole(role: RoleEnum) {
   return {
@@ -9,3 +9,113 @@ export function translateRole(role: RoleEnum) {
     [RoleEnum.Parent]: "Родитель",
   }[role]
 }
+
+export function translateRinkType(type: RinkTypeEnum) {
+  return {
+    [RinkTypeEnum.All]: "Все",
+    [RinkTypeEnum.Indoor]: "Крытый",
+    [RinkTypeEnum.Outdoor]: "Открытый",
+  }[type]
+}
+
+export function translateMetroStation(station: MetroStationEnum): string {
+  return {
+    [MetroStationEnum.Devyatkino]: "Девяткино",
+    [MetroStationEnum.GrazhdanskiyProspekt]: "Гражданский Проспект",
+    [MetroStationEnum.Akademichskaya]: "Академическая",
+    [MetroStationEnum.Politekhnicheskaya]: "Политехническая",
+    [MetroStationEnum.PloshchadMuzhestva]: "Площадь Мужества",
+    [MetroStationEnum.Lesnaya]: "Лесная",
+    [MetroStationEnum.Vyborgskaya]: "Выборгская",
+    [MetroStationEnum.PloshchadLenina]: "Площадь Ленина",
+    [MetroStationEnum.Chernyshevskaya]: "Чернышевская",
+    [MetroStationEnum.PloshchadVosstaniya]: "Площадь Восстания",
+    [MetroStationEnum.Vladimirskaya]: "Владимирская",
+    [MetroStationEnum.Pushkinskaya]: "Пушкинская",
+    [MetroStationEnum.TekhnologicheskiyInstitut1]: "Технологический Институт",
+    [MetroStationEnum.Baltiyskaya]: "Балтийская",
+    [MetroStationEnum.Narvskaya]: "Нарвская",
+    [MetroStationEnum.KirovskiyZavod]: "Кировский Завод",
+    [MetroStationEnum.Avtovo]: "Автово",
+    [MetroStationEnum.LeninskiyProspekt]: "Ленинский Проспект",
+    [MetroStationEnum.ProspektVeteranov]: "Проспект Ветеранов",
+    [MetroStationEnum.Parnas]: "Парнас",
+    [MetroStationEnum.ProspektProsveshcheniya]: "Проспект Просвещения",
+    [MetroStationEnum.Ozerki]: "Озерки",
+    [MetroStationEnum.Udelnaya]: "Удельная",
+    [MetroStationEnum.Pionerskaya]: "Пионерская",
+    [MetroStationEnum.ChyornayaRechka]: "Чёрная Речка",
+    [MetroStationEnum.Petrogradskaya]: "Петроградская",
+    [MetroStationEnum.Gorkovskaya]: "Горьковская",
+    [MetroStationEnum.NevskiyProspekt]: "Невский Проспект",
+    [MetroStationEnum.SennayaPloshchad]: "Сенная Площадь",
+    [MetroStationEnum.TekhnologicheskiyInstitut2]: "Технологический Институт 2",
+    [MetroStationEnum.Frunzenskaya]: "Фрунзенская",
+    [MetroStationEnum.MoskovskieVorota]: "Московские Ворота",
+    [MetroStationEnum.Elektrosila]: "Электросила",
+    [MetroStationEnum.ParkPobedy]: "Парк Победы",
+    [MetroStationEnum.Moskovskaya]: "Московская",
+    [MetroStationEnum.Zvezdnaya]: "Звёздная",
+    [MetroStationEnum.Kupchino]: "Купчино",
+    [MetroStationEnum.Begovaya]: "Беговая",
+    [MetroStationEnum.Zenit]: "Зенит",
+    [MetroStationEnum.Primorskaya]: "Приморская",
+    [MetroStationEnum.Vasileostrovskaya]: "Василеостровская",
+    [MetroStationEnum.GostinyDvor]: "Гостиный Двор",
+    [MetroStationEnum.Mayakovskaya]: "Маяковская",
+    [MetroStationEnum.PloshchadAlexandraNevskogo1]: "Площадь Александра Невского",
+    [MetroStationEnum.Elizarovskaya]: "Елизаровская",
+    [MetroStationEnum.Lomonosovskaya]: "Ломоносовская",
+    [MetroStationEnum.Proletarskaya]: "Пролетарская",
+    [MetroStationEnum.Obukhovo]: "Обухово",
+    [MetroStationEnum.Rybatskoye]: "Рыбацкое",
+    [MetroStationEnum.GornyInstitut]: "Горный Институт",
+    [MetroStationEnum.Spasskaya]: "Спасская",
+    [MetroStationEnum.Dostoevskaya]: "Достоевская",
+    [MetroStationEnum.LigovskiyProspekt]: "Лиговский Проспект",
+    [MetroStationEnum.PloshchadAlexandraNevskogo2]: "Площадь Александра Невского 2",
+    [MetroStationEnum.Novocherkasskaya]: "Новочеркасская",
+    [MetroStationEnum.Ladozhskaya]: "Ладожская",
+    [MetroStationEnum.ProspektBolshevikov]: "Проспект Большевиков",
+    [MetroStationEnum.UlicaDybenko]: "Улица Дыбенко",
+    [MetroStationEnum.KomendantskiyProspekt]: "Комендантский Проспект",
+    [MetroStationEnum.StarayaDerevnya]: "Старая Деревня",
+    [MetroStationEnum.KrestovskiyOstrov]: "Крестовский Остров",
+    [MetroStationEnum.Chkalovskaya]: "Чкаловская",
+    [MetroStationEnum.Sportivnaya]: "Спортивная",
+    [MetroStationEnum.Admiralteyskaya]: "Адмиралтейская",
+    [MetroStationEnum.Sadovaya]: "Садовая",
+    [MetroStationEnum.Zvenigorodskaya]: "Звенигородская",
+    [MetroStationEnum.ObvodnyyKanal]: "Обводный Канал",
+    [MetroStationEnum.Volkovskaya]: "Волковская",
+    [MetroStationEnum.Bukharestskaya]: "Бухарестская",
+    [MetroStationEnum.Mezhdunarodnaya]: "Международная",
+    [MetroStationEnum.ProspektSlavy]: "Проспект Славы",
+    [MetroStationEnum.Dunaiskaya]: "Дунайская",
+    [MetroStationEnum.Shushary]: "Шушары",
+  }[station]
+}
+
+export function translateDistrict(district: DistrictEnum): string {
+  return {
+    [DistrictEnum.Admiralteysky]: "Адмиралтейский",
+    [DistrictEnum.Vasileostrovsky]: "Василеостровский",
+    [DistrictEnum.Vyborgsky]: "Выборгский",
+    [DistrictEnum.Kalininsky]: "Калининский",
+    [DistrictEnum.Kirovsky]: "Кировский",
+    [DistrictEnum.Kolpinsky]: "Колпинский",
+    [DistrictEnum.Krasnogvardeysky]: "Красногвардейский",
+    [DistrictEnum.Krasnoselsky]: "Красносельский",
+    [DistrictEnum.Kronshtadtsky]: "Кронштадтский",
+    [DistrictEnum.Kurortny]: "Курортный",
+    [DistrictEnum.Moskovsky]: "Московский",
+    [DistrictEnum.Nevsky]: "Невский",
+    [DistrictEnum.Petrogradsky]: "Петроградский",
+    [DistrictEnum.Petrodvortsovy]: "Петродворцовый",
+    [DistrictEnum.Primorsky]: "Приморский",
+    [DistrictEnum.Pushkinsky]: "Пушкинский",
+    [DistrictEnum.Frunzensky]: "Фрунзенский",
+    [DistrictEnum.Tsentralny]: "Центральный",
+  }[district]
+}
+
