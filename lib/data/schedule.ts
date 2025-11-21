@@ -32,7 +32,7 @@ export async function getScheduleGroupedByDay(params: {
     const hasSessionTypes = sessionTypes?.length
     const hasDistrict = !!districts
     const hasRinkType = rinkType && rinkType !== RinkTypeEnum.All
-    console.log(hasDistrict)
+
     const schedule = await prisma.schedule.findMany({
         where: {
             ...(hasDate && {

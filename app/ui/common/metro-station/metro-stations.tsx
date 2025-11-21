@@ -1,10 +1,13 @@
 import { Space } from "antd"
 import { MetroStation } from "./metro-station"
-import { MetroStationEnum } from "../../../types/enums"
 import Text from "antd/es/typography/Text"
 
+type MetroStationType = {
+  id: string
+  station: string
+}
 type Props = {
-  metroStations?: MetroStationEnum[]
+  metroStations?: MetroStationType[]
 }
 
 export function MetroStations({ metroStations = [] }: Props) {
@@ -12,9 +15,9 @@ export function MetroStations({ metroStations = [] }: Props) {
 
   return (
     <Space wrap size={[8, 4]}>
-      {metroStations.map((station, index) => (
-        <Text key={index}>
-          <MetroStation name={station} />
+      {metroStations.map((metro, index) => (
+        <Text key={metro.id}>
+          <MetroStation name={metro.station} />
           {index < metroStations.length - 1 && <span>,</span>}
         </Text>
       ))}
