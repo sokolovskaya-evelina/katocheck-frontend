@@ -81,3 +81,51 @@ export const getIceRinksShortInfo = async (params: {
 
     return data
 }
+
+export const getIceRinkById = async (
+    id: string,
+    filters?: {
+        day?: string
+        arenaId?: string
+        sessionType?: string
+    }
+) => {
+    const { day, arenaId, sessionType } = filters || {}
+
+    const startOfDay = day ? dayjs(day).startOf("day").toDate() : undefined
+    const endOfDay = day ? dayjs(day).endOf("day").toDate() : undefined
+
+    return prisma.iceRink.findUnique({
+        where: { id },
+        include: {
+            metroStations: true,
+            phones: true,
+            socialLinks: true,
+            arenas: true,
+            sessionTypes: true,
+            schedules: {
+                where: {
+                    ...(day && {
+                        startTime: {
+                            gte: startOfDay,
+                            lte: endOfDay,
+                        },
+                    }),
+                    ...(arenaId && {
+                        arenaId,
+                    }),
+                    ...(sessionType && {
+                        sessionTypeId: sessionType,
+                    }),
+                },
+                orderBy: {
+                    startTime: "asc",
+                },
+                include: {
+                    arena: true,
+                    sessionType: true,
+                },
+            },
+        },
+    })
+}

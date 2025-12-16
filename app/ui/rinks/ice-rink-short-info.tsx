@@ -12,7 +12,7 @@ export default function IceRinkShortInfo({ rink }: { rink: any }) {
     <Card
       title={
         <Text ellipsis={{ tooltip: true }}>
-          <Link href={`/rinks/${rink.rinkId}`}>{rink.name}</Link>
+          <Link href={`/rinks/${rink.id}`}>{rink.name}</Link>
         </Text>
       }
     >
