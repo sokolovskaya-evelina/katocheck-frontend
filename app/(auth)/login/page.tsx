@@ -5,7 +5,7 @@ import type { FormProps } from "antd"
 import { Button, Card, Form, Input } from "antd"
 import FormItem from "antd/es/form/FormItem"
 import Password from "antd/es/input/Password"
-import {signInUser} from "@/app/lib/actions";
+import {signInUser} from "@/app/lib/actions/auth";
 
 type FieldType = {
   email?: string
