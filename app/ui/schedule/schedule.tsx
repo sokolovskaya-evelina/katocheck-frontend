@@ -1,4 +1,4 @@
-import {Badge, Collapse, Flex} from "antd"
+import {Badge, Collapse, Flex, Button} from "antd"
 import {CalendarIcon} from "lucide-react"
 import dayjs from "@/app/lib/dayjs"
 import Text from "antd/es/typography/Text"
@@ -70,14 +70,24 @@ export const Schedule = async ({searchParams}: Props) => {
 
     return (
         <div>
-            {items.length > 0 ?
+            {items.length > 0 &&
                 <Collapse
+                    defaultActiveKey={dayjs().startOf("day").toISOString()}
                     items={items}
                     bordered={false}
                     expandIconPosition="end"
-                    className="!bg-transparent grid xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-1 gap-4 items-start"
-                /> :
-                <div className="text-center italic">⛸️ Сеансов не найдено. Попробуйте изменить фильтры! ⛸️</div>}
+                    ghost
+                    className="grid xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-1 gap-4 items-start"
+                />
+            }
+            {Object.keys(searchParams).length > 0 && !items.length &&
+                <Flex vertical align="center" className="text-center italic gap-4"><span>⛸️ Сеансов не найдено. Попробуйте изменить фильтры! ⛸️</span>
+                    <Link href="/">
+                        <Button>Сбросить фильтры</Button>
+                    </Link>
+                </Flex>}
+            {Object.keys(searchParams).length === 0 && !items.length &&
+                <div className="text-center italic">Тут пока нет расписания, загляните позже 🥹</div>}
         </div>
     )
 }

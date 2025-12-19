@@ -4,8 +4,9 @@ import { Button, Drawer, Layout, Menu } from "antd"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
 import Link from "next/link"
-import { navItems } from "../../../lib/constsnts"
+import { navItems } from "@/app/lib/constsnts"
 import { AlignJustify } from "lucide-react"
+import {Logo} from "@/app/ui/common/header/logo";
 
 const { Header: AppHeader } = Layout
 
@@ -16,10 +17,7 @@ export function Header() {
   return (
     <AppHeader className="shadow-sm sticky top-0 z-50">
       <div className="max-w-screen-xl mx-auto flex items-center justify-between">
-        <Link href="/public" className="text-xl font-semibold text-blue-600">
-          KatoCheck
-        </Link>
-
+        <Logo />
         <div className="hidden md:flex flex-1 justify-end">
           <Menu
             mode="horizontal"
