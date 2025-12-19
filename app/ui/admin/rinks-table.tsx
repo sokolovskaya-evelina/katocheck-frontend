@@ -1,210 +1,184 @@
 "use client"
 
-import React, { useState } from "react"
-import { Button, Card, Flex, Input, Popconfirm, Select, Space, Table, Tooltip } from "antd"
-import { Pencil, Save, Snowflake, Trash, X } from "lucide-react"
-import type { ColumnsType } from "antd/es/table"
-import useBreakpoint from "antd/es/grid/hooks/useBreakpoint"
-import Password from "antd/es/input/Password"
+import {
+    Button,
+    Form,
+    Input,
+    Popconfirm,
+    Table,
+    Typography,
+    Card,
+    Flex,
+    message,
+} from "antd"
+import { useEffect, useState } from "react"
+import type { Rink } from "@/types/prisma" // поправь путь
 import NewRinkModal from "./new-rink-modal"
-import { RoleEnum } from "../../types/enums"
-import { translateRole } from "../../lib/translations/admin/enum.translationts"
+import {deleteRink, getAllRinks, updateRink} from "@/app/lib/actions/admin/ice-rinks";
 
-export type RinkItemType = {
-  rinkId: string
-  name: string
-  login: string
-  password: string
-  role: RoleEnum
-  isActive: boolean
-}
-
-const initialData: RinkItemType[] = [
-  {
-    rinkId: "123",
-    name: "Озерки",
-    login: "ozerki123",
-    password: "123",
-    isActive: true,
-    role: RoleEnum.Admin,
-  },
-  {
-    rinkId: "0",
-    name: "Магнит",
-    login: "magnit",
-    password: "13245",
-    isActive: false,
-    role: RoleEnum.SuperAdmin,
-  },
-]
+type EditableRink = Rink & { key: string }
 
 export default function RinksTable() {
-  const screens = useBreakpoint()
-  const [open, setOpen] = useState(false)
-  const [data, setData] = useState<RinkItemType[]>(initialData)
-  const [editingKey, setEditingKey] = useState<string | null>(null)
-  const [editedData, setEditedData] = useState<Record<string, Partial<RinkItemType>>>({})
+    const [form] = Form.useForm()
+    const [messageApi, contextHolder] = message.useMessage();
 
-  const isEditing = (record: RinkItemType) => record.rinkId === editingKey
+    const [data, setData] = useState<EditableRink[]>([])
+    const [editingKey, setEditingKey] = useState("")
+    const [loading, setLoading] = useState(false)
+    const [modalOpen, setModalOpen] = useState(false)
 
-  const handleEdit = (record: RinkItemType) => {
-    if (!record.isActive) return // нельзя редактировать замороженные строки
-    setEditingKey(record.rinkId)
-  }
+    const isEditing = (record: EditableRink) => record.key === editingKey
 
-  const handleInputChange = (rinkId: string, field: keyof RinkItemType, value: string) => {
-    setEditedData(prev => ({
-      ...prev,
-      [rinkId]: { ...prev[rinkId], [field]: value },
-    }))
-  }
+    const fetchData = async () => {
+        setLoading()
+        const rinks = await getAllRinks()
+        setData(rinks.map(r => ({ ...r, key: r.id })))
+    }
+    console.log(data)
+    useEffect(() => {
+        fetchData()
+    }, [])
 
-  const handleSave = () => {
-    const newData = data.map(item =>
-      editedData[item.rinkId] ? { ...item, ...editedData[item.rinkId] } : item
-    )
-    console.log("Отправляем на сервер:", Object.values(editedData))
-    setData(newData)
-    setEditedData({})
-    setEditingKey(null)
-  }
+    const edit = (record: EditableRink) => {
+        form.setFieldsValue({ name: "", ...record })
+        setEditingKey(record.key)
+    }
 
-  const handleCancelEdit = () => {
-    setEditingKey(null)
-  }
+    const cancel = () => setEditingKey("")
 
-  const handleToggleActive = (rinkId: string) => {
-    setData(prev =>
-      prev.map(item => (item.rinkId === rinkId ? { ...item, isActive: !item.isActive } : item))
-    )
-  }
+    const save = async (key: string) => {
+        try {
+            const row = await form.validateFields()
+            const old = data.find(item => item.key === key)
+            if (!old) return
+            await updateRink(key, row)
+            await fetchData()
+            setEditingKey("")
+            messageApi.open({
+                type: 'success',
+                content: 'Данные успешно обновлены',
+            });
+        } catch (err) {
+            console.error(err)
+            messageApi.open({
+                type: 'error',
+                content: 'Произошла ошибка, попробуйте ещё раз',
+            });        }
+    }
 
-  const columns: ColumnsType<RinkItemType> = [
-    {
-      title: "Название",
-      dataIndex: "name",
-      render: (value, record) =>
-        isEditing(record) ? (
-          <Input
-            value={editedData[record.rinkId]?.name ?? value}
-            onChange={e => handleInputChange(record.rinkId, "name", e.target.value)}
-          />
-        ) : (
-          value
-        ),
-    },
-    {
-      title: "Логин",
-      dataIndex: "login",
-      render: (value, record) =>
-        isEditing(record) ? (
-          <Input
-            value={editedData[record.rinkId]?.login ?? value}
-            onChange={e => handleInputChange(record.rinkId, "login", e.target.value)}
-          />
-        ) : (
-          value
-        ),
-    },
-    {
-      title: "Пароль",
-      dataIndex: "password",
-      render: (value, record) =>
-        isEditing(record) ? (
-          <Password
-            value={editedData[record.rinkId]?.password ?? value}
-            onChange={e => handleInputChange(record.rinkId, "password", e.target.value)}
-          />
-        ) : (
-          <Password value={value} readOnly />
-        ),
-    },
-    {
-      title: "Роль",
-      dataIndex: "role",
-      render: (value, record) =>
-        isEditing(record) ? (
-          <Select
-            options={[
-              { value: RoleEnum.Admin, label: "Админ" },
-              { value: RoleEnum.SuperAdmin, label: "Суперадмин" },
-            ]}
-            value={editedData[record.rinkId]?.role ?? value}
-            onChange={e => {
-              console.log(e)
-              handleInputChange(record.rinkId, "role", e)
-            }}
-          />
-        ) : (
-          translateRole(value)
-        ),
-    },
-    {
-      title: "",
-      key: "actions",
-      width: 200,
-      align: "center",
-      render: (_, record) => (
-        <Space>
-          {isEditing(record) ? (
-            <>
-              <Button type="primary" icon={<Save className="w-4 h-4" />} onClick={handleSave} />
-              <Button danger icon={<X className="w-4 h-4" />} onClick={handleCancelEdit} />
-            </>
-          ) : (
-            <Button
-              onClick={() => handleEdit(record)}
-              icon={<Pencil className="w-4 h-4" />}
-              disabled={!record.isActive}
-            />
-          )}
-
-          <Tooltip title={record.isActive ? "Заморозить" : "Разморозить"}>
-            <Button
-              onClick={() => handleToggleActive(record.rinkId)}
-              icon={
-                <Snowflake
-                  className={`w-4 h-4 transition-colors ${record.isActive ? "" : "stroke-primary"}`}
-                />
-              }
-              type={record.isActive ? "default" : "dashed"}
-            />
-          </Tooltip>
-
-          <Popconfirm
-            title="Уверены, что хотите удалить?"
-            onConfirm={() => console.log(record.rinkId)}
-          >
-            <Button danger icon={<Trash className="w-4 h-4" />} />
-          </Popconfirm>
-        </Space>
-      ),
-    },
-  ]
-
-  return (
-    <Card>
-      <Card.Meta
-        title={
-          <Flex align="center" gap={16} wrap="wrap">
-            Катки
-            <Button type="primary" onClick={() => setOpen(true)}>
-              Добавить каток
-            </Button>
-          </Flex>
+    const handleDelete = async (id: string) => {
+        try {
+            await deleteRink(id)
+            await fetchData()
+            messageApi.success("Каток удалён")
+        } catch (err) {
+            console.error(err)
+            messageApi.error("Ошибка при удалении")
         }
-      />
-      <Card style={{ marginTop: 24 }}>
-        <Table
-          scroll={{ x: screens.sm ? undefined : "max-content" }}
-          columns={columns}
-          dataSource={data}
-          rowKey="rinkId"
-          pagination={false}
-          rowClassName={record => (!record.isActive ? "opacity-60 bg-gray-50" : "")}
-        />
-      </Card>
-      <NewRinkModal open={open} setOpen={setOpen} />
-    </Card>
-  )
+    }
+
+    const columns = [
+        {
+            title: "Название",
+            dataIndex: "name",
+            editable: true,
+        },
+        {
+            title: "Админы",
+            dataIndex: "managers",
+            render: (managers: Rink["managers"]) =>
+                managers.map(m => m.name).join(", "),
+        },
+        {
+            title: "Действия",
+            dataIndex: "actions",
+            render: (_: any, record: EditableRink) => {
+                const editable = isEditing(record)
+                return editable ? (
+                    <span>
+            <Typography.Link onClick={() => save(record.key)} style={{ marginRight: 8 }}>
+              Сохранить
+            </Typography.Link>
+            <Popconfirm title="Отменить изменения?" onConfirm={cancel}>
+              <a>Отмена</a>
+            </Popconfirm>
+          </span>
+                ) : (
+                    <Flex gap={8}>
+                        <Typography.Link disabled={editingKey !== ""} onClick={() => edit(record)}>
+                            Редактировать
+                        </Typography.Link>
+                        <Popconfirm title="Удалить каток?" onConfirm={() => handleDelete(record.id)}>
+                            <Typography.Link type="danger">Удалить</Typography.Link>
+                        </Popconfirm>
+                    </Flex>
+                )
+            },
+        },
+    ]
+
+    const mergedColumns = columns.map(col => {
+        if (!col.editable) return col
+        return {
+            ...col,
+            onCell: (record: EditableRink) => ({
+                record,
+                inputType: "text",
+                dataIndex: col.dataIndex,
+                title: col.title,
+                editing: isEditing(record),
+            }),
+        }
+    })
+
+    const EditableCell = ({
+                              editing,
+                              dataIndex,
+                              title,
+                              inputType,
+                              record,
+                              children,
+                              ...restProps
+                          }: any) => {
+        return (
+            <td {...restProps}>
+                {editing ? (
+                    <Form.Item name={dataIndex} style={{ margin: 0 }} rules={[{ required: true, message: `Введите ${title}` }]}>
+                        <Input />
+                    </Form.Item>
+                ) : (
+                    children
+                )}
+            </td>
+        )
+    }
+
+    return (
+        <Card>
+            {contextHolder}
+            <Card.Meta
+                title={
+                    <Flex align="center" gap={16}>
+                        Катки
+                        <Button type="primary" onClick={() => setModalOpen(true)}>
+                            Добавить каток
+                        </Button>
+                    </Flex>
+                }
+            />
+            <Form form={form} component={false}>
+                <Table
+                    components={{ body: { cell: EditableCell } }}
+                    bordered
+                    dataSource={data}
+                    columns={mergedColumns}
+                    rowClassName="editable-row"
+                    pagination={{ onChange: cancel }}
+                    style={{ marginTop: 24 }}
+                    loading={loading}
+                />
+            </Form>
+            <NewRinkModal open={modalOpen} setOpen={setModalOpen} onCreated={fetchData} />
+        </Card>
+    )
 }
