@@ -81,7 +81,8 @@ export const Schedule = async ({searchParams}: Props) => {
                 />
             }
             {Object.keys(searchParams).length > 0 && !items.length &&
-                <Flex vertical align="center" className="text-center italic gap-4"><span>⛸️ Сеансов не найдено. Попробуйте изменить фильтры! ⛸️</span>
+                <Flex vertical align="center" className="text-center italic gap-4">
+                    <span>⛸️ Сеансов не найдено. Попробуйте изменить фильтры! ⛸️</span>
                     <Link href="/">
                         <Button>Сбросить фильтры</Button>
                     </Link>

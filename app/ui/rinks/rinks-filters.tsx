@@ -54,7 +54,7 @@ const RinksFilters = ({ sessionTypes }: Props) => {
 
     setLocalFilters(updatedFilters)
     setDraftFilters(updatedFilters)
-  }, [])
+  }, [searchParams])
 
   const updateParams = () => {
     const p = new URLSearchParams()
