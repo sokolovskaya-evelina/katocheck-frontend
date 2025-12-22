@@ -1,10 +1,12 @@
 import React from "react"
-import {Collapse, Divider, Flex, Tag} from "antd"
+import {Collapse, Divider, Flex, Tag, Button} from "antd"
 import {RinkScheduleFilters} from "@/app/ui/rinks/rink-schedule-filters";
 import dayjs from "@/app/lib/dayjs";
 import {CalendarIcon, ClockIcon, MapPinIcon} from "lucide-react";
 import Title from "antd/es/typography/Title"
 import Text from "antd/es/typography/Text"
+import {getIceRinkScheduleById} from "@/lib/data/ice-rinks";
+import Link from "next/link";
 
 const getTypeColor = (type: string) => {
     switch (type) {
@@ -22,14 +24,28 @@ const getTypeColor = (type: string) => {
 }
 
 type Props = {
-    schedule: any[]
-    arenaOptions: { label: string, value: string }[]
-    sessionTypeOptions: { label: string, value: string }[]
-    selectedDay?: string
+    searchParams: Record<string, string | string[]>
+    id: string
 }
 
-export function RinkSchedule({schedule, arenaOptions, sessionTypeOptions, selectedDay}: Props) {
-    console.log(selectedDay)
+export async function RinkSchedule({searchParams, id}: Props) {
+    const parsed = {
+        day: typeof searchParams.day === "string" ? searchParams.day : undefined,
+        arenaId: typeof searchParams.arenaId === "string" ? searchParams.arenaId : undefined,
+        sessionType: typeof searchParams.sessionType === "string" ? searchParams.sessionType : undefined,
+    }
+
+    const sch = await getIceRinkScheduleById(id, parsed)
+
+    const arenaOptions = Object.values(sch.arenas).map(option => ({value: option.id, label: option.name}))
+    const sessionTypeOptions = Object.values(sch.sessionTypes).map(option => ({value: option.id, label: option.name}))
+
+    const schedule = sch.schedules.reduce((acc, item) => {
+        const dateKey = dayjs(item.date).format("YYYY-MM-DD")
+        if (!acc[dateKey]) acc[dateKey] = []
+        acc[dateKey].push(item)
+        return acc
+    }, {} as Record<string, typeof sch.schedules>)
 
     const items = Object.entries(schedule).map(([date, items]) => ({
         key: date,
@@ -77,11 +93,11 @@ export function RinkSchedule({schedule, arenaOptions, sessionTypeOptions, select
     return (
         <Flex vertical gap={12}>
             <Flex gap={12} vertical>
-                <RinkScheduleFilters schedule={schedule} sessionTypeOptions={sessionTypeOptions}
+                <RinkScheduleFilters sessionTypeOptions={sessionTypeOptions}
                                      arenaOptions={arenaOptions}/>
             </Flex>
             {
-                selectedDay ? Object.entries(schedule).map(([date, item], i) => (
+                parsed.day ? Object.entries(schedule).map(([date, item], i) => (
                     <Flex
                         key={i}
                         className="border border-slate-200 bg-gray-50 rounded-md !p-2"
@@ -98,19 +114,27 @@ export function RinkSchedule({schedule, arenaOptions, sessionTypeOptions, select
                         </Flex>
 
                         <Flex align="center" gap={8} wrap="wrap">
-                            {item.map(i => <>  <Tag className={getTypeColor(i.sessionType.name)}>{i.sessionType.name}</Tag>
+                            {item.map(i => <Flex align="center" key={i.id}><Tag className={getTypeColor(i.sessionType.name)}>{i.sessionType.name}</Tag>
                                 <Divider type="vertical"/>
                                 <Flex align="center" gap={4}>
                                     <MapPinIcon className="w-4 h-4 text-gray-500"/>
                                     <Text type="secondary">{i.arena.name}</Text>
-                                </Flex></>)}
+                                </Flex></Flex>)}
 
                         </Flex>
                     </Flex>
-                )) : <Collapse items={items} bordered={false} expandIconPosition="end" className="!bg-transparent"
+                )) : <Collapse items={items} bordered={false} expandIconPosition="end" ghost
                                size="small"/>
             }
-
+            {Object.keys(schedule).length === 0 && Object.keys(searchParams).length > 0 &&  <Flex vertical align="center" className="text-center italic gap-4">
+                <span>⛸️ По данным фильтрам сеансы не найдены ⛸️</span>
+                <Link href={`/rinks/${id}`}>
+                    <Button>Сбросить фильтры</Button>
+                </Link>️
+            </Flex>}
+            {Object.keys(schedule).length === 0 && Object.keys(searchParams).length === 0 &&  <Flex vertical align="center" className="text-center italic gap-4">
+                <span>⛸️ Сеансов не найдено ⛸️</span>
+            </Flex>}
         </Flex>
     )
 }

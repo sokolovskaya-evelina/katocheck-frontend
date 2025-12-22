@@ -8,6 +8,7 @@ import Title from "antd/es/typography/Title"
 import TextLink from "antd/es/typography/Link"
 import {translateDistrict} from "@/app/lib/translations/admin/enum.translationts";
 import {IoMailOutline} from "react-icons/io5";
+import {getIceRinkInfoById} from "@/lib/data/ice-rinks";
 
 const getSocialIcon = (name: string) => {
     switch (name) {
@@ -24,9 +25,11 @@ const getSocialIcon = (name: string) => {
     }
 }
 
-type Props = { rink: any }
+type Props = { id: string }
 
-export default function IceRinkFullInfo({rink}: Props) {
+export default async function IceRinkFullInfo({id}: Props) {
+    const rink = await getIceRinkInfoById(id)
+
     return (
         <Card
             className="overflow-hidden p-0"
@@ -40,15 +43,15 @@ export default function IceRinkFullInfo({rink}: Props) {
                 />
             }
         >
-            <div className="flex justify-between gap-6 px-6 pb-6">
+            <Title level={3}>{rink.name}</Title>
+            <div className="flex gap-6">
                 <Flex vertical gap={8} className="max-w-full">
-                    <Title level={3}>{rink.name}</Title>
-
-                    <Space size="small" align="center">
-                        <MapPin className="w-4 h-4 stroke-slate-500"/>
-                        <Text>{rink.address}</Text>
-                    </Space>
-
+                    {rink.address &&
+                        <Space size="small" align="center">
+                            <MapPin className="w-4 h-4 stroke-slate-500"/>
+                            <Text>{rink.address}</Text>
+                        </Space>
+                    }
                     {rink.district && (
                         <Space size="small" align="center">
                             <Map className="w-4 h-4 stroke-slate-500"/>
@@ -64,47 +67,46 @@ export default function IceRinkFullInfo({rink}: Props) {
                     )}
                 </Flex>
                 <Flex vertical gap={8} justify="end">
-                  {rink.socialLinks?.length > 0 && (
-                      <Space
-                          size="small"
-                          className="flex flex-wrap items-center mt-1"
-                          split={<Divider type="vertical"/>}
-                      >
-                        {rink.socialLinks.map((social) => (
-                            <span key={`social-${social.id}`} className="flex items-center gap-1">
+                    {rink.socialLinks?.length > 0 && (
+                        <Space
+                            size="small"
+                            className="flex flex-wrap items-center mt-1"
+                            split={<Divider type="vertical"/>}
+                        >
+                            {rink.socialLinks.map((social) => (
+                                <span key={`social-${social.id}`} className="flex items-center gap-1">
                               {getSocialIcon(social.type)}
-                              <TextLink target="_blank" rel="noopener noreferrer"
-                                        href={social.url}>{social.type}</TextLink>
+                                    <TextLink target="_blank" rel="noopener noreferrer"
+                                              href={social.url}>{social.type}</TextLink>
                             </span>
-                        ))}
-                      </Space>
-                  )}
-                  {rink.website &&      <span className="flex items-center gap-1">
+                            ))}
+                        </Space>
+                    )}
+                    {rink.website && <span className="flex items-center gap-1">
                               <FaGlobe className="w-4 h-4 fill-slate-500"/>
                 <TextLink target="_blank" rel="noopener noreferrer"
                           href={rink.website}>Сайт: {rink.website}</TextLink>
-                            </span> }
-                  {rink.phones?.length > 0 && (
-                      <Space size="small" align="center">
-                        <Phone className="w-4 h-4 stroke-slate-500"/>
-                        <Space
-                            size="small"
-                            className="flex flex-wrap items-center"
-                            split={<Divider type="vertical"/>}
-                        >
-                          {rink.phones.map((phone) => (
-                              <TextLink key={`phone-${phone.id}`} href={`tel:${phone.number}`}>
-                                {phone.number} ({phone.comment})
-                              </TextLink>
-                          ))}
+                            </span>}
+                    {rink.phones?.length > 0 && (
+                        <Space size="small" align="center">
+                            <Phone className="w-4 h-4 stroke-slate-500"/>
+                            <Space
+                                size="small"
+                                className="flex flex-wrap items-center"
+                                split={<Divider type="vertical"/>}
+                            >
+                                {rink.phones.map((phone) => (
+                                    <TextLink key={`phone-${phone.id}`} href={`tel:${phone.number}`}>
+                                        {phone.number} ({phone.comment})
+                                    </TextLink>
+                                ))}
+                            </Space>
                         </Space>
-                      </Space>
-                  )}
-                  {rink.email &&      <span className="flex items-center gap-1">
-                              <IoMailOutline className="w-4 h-4 fill-slate-500"/>
-                <TextLink target="_blank" rel="noopener noreferrer"
-                          href={rink.website}>Сайт: {rink.website}</TextLink>
-                            </span> }
+                    )}
+                    {rink.email && <span className="flex items-center gap-1">
+                        <IoMailOutline className="w-4 h-4 fill-slate-500"/>
+                        <TextLink target="_blank" rel="noopener noreferrer" href={rink.website}>{rink.email}</TextLink>
+                    </span>}
                 </Flex>
             </div>
         </Card>

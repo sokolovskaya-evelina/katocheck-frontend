@@ -1,10 +1,9 @@
 "use client"
 
-import React, { useEffect, useMemo, useState } from "react"
-import { Flex, Segmented } from "antd"
+import React, {useEffect, useMemo, useState} from "react"
+import {Flex, Tabs, TabsProps} from "antd"
 import dayjs from "@/app/lib/dayjs"
-import Text from "antd/es/typography/Text"
-import { useRouter, useSearchParams } from "next/navigation"
+import {useRouter, useSearchParams} from "next/navigation"
 
 const initialFilterState = {
     day: "ALL",
@@ -13,12 +12,11 @@ const initialFilterState = {
 }
 
 type Props = {
-    schedule: any[]
     arenaOptions: { label: string; value: string }[]
     sessionTypeOptions: { label: string; value: string }[]
 }
 
-export function RinkScheduleFilters({ schedule, arenaOptions, sessionTypeOptions }: Props) {
+export function RinkScheduleFilters({ arenaOptions, sessionTypeOptions }: Props) {
     const searchParams = useSearchParams()
     const router = useRouter()
 
@@ -28,22 +26,22 @@ export function RinkScheduleFilters({ schedule, arenaOptions, sessionTypeOptions
         const result = [{ value: "ALL", label: "Все" }]
         for (let i = 0; i < 7; i++) {
             const date = dayjs().startOf("week").add(i, "day")
-            result.push({ value: date.format("YYYY-MM-DD"), label: `${date.format("dd")} (${date.format("DD.MM")})` })
+            result.push({
+                value: date.format("YYYY-MM-DD"),
+                label: `${date.format("dd")} (${date.format("DD.MM")})`,
+            })
         }
         return result
     }, [])
 
     useEffect(() => {
         const params = Object.fromEntries(searchParams.entries())
-
-        const updatedFilters = {
+        setFilters({
             ...initialFilterState,
             day: params.day || "ALL",
             arenaId: params.arenaId || "ALL",
             sessionType: params.sessionType || "ALL",
-        }
-
-        setFilters(updatedFilters)
+        })
     }, [searchParams])
 
     const updateFilters = (key: keyof typeof filters, value: string) => {
@@ -54,41 +52,40 @@ export function RinkScheduleFilters({ schedule, arenaOptions, sessionTypeOptions
         if (newFilters.day !== "ALL") p.set("day", newFilters.day)
         if (newFilters.arenaId !== "ALL") p.set("arenaId", newFilters.arenaId)
         if (newFilters.sessionType !== "ALL") p.set("sessionType", newFilters.sessionType)
-        router.push("?" + p.toString(), {scroll: false})
+        router.push("?" + p.toString(), { scroll: false })
     }
 
+    const toTabItems = (list: { label: string; value: string }[]): TabsProps["items"] =>
+        list.map((item) => ({
+            key: item.value,
+            label: item.label,
+        }))
+
     return (
-        <Flex gap={12} vertical>
-            <Segmented
-                options={daysOptions.map((d) => ({
-                    label: (
-                        <Text
-                            className="capitalize"
-                            strong={
-                                d.value !== "ALL" &&
-                                dayjs(d.value).startOf("day").isSame(dayjs().startOf("day"))
-                            }
-                        >
-                            {d.label}
-                        </Text>
-                    ),
-                    value: d.value,
-                }))}
-                value={filters.day}
+        <Flex vertical>
+            <Tabs
+                items={toTabItems(daysOptions)}
+                activeKey={filters.day}
                 onChange={(val) => updateFilters("day", val)}
+                size="small"
+                type="card"
             />
             {arenaOptions.length > 1 && (
-                <Segmented
-                    options={[{ value: "ALL", label: "Все" }, ...arenaOptions]}
-                    value={filters.arenaId}
+                <Tabs
+                    items={toTabItems([{ value: "ALL", label: "Все" }, ...arenaOptions])}
+                    activeKey={filters.arenaId}
                     onChange={(val) => updateFilters("arenaId", val)}
+                    size="small"
+                    type="card"
                 />
             )}
             {sessionTypeOptions.length > 1 && (
-                <Segmented
-                    options={[{ value: "ALL", label: "Все" }, ...sessionTypeOptions]}
-                    value={filters.sessionType}
+                <Tabs
+                    items={toTabItems([{ value: "ALL", label: "Все" }, ...sessionTypeOptions])}
+                    activeKey={filters.sessionType}
                     onChange={(val) => updateFilters("sessionType", val)}
+                    size="small"
+                    type="card"
                 />
             )}
         </Flex>
