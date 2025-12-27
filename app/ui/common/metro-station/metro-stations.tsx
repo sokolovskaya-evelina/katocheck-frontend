@@ -1,6 +1,9 @@
 import { Space } from "antd"
-import { MetroStation } from "./metro-station"
 import Text from "antd/es/typography/Text"
+
+import { MetroStationEnum } from "@/app/types/enums"
+
+import { MetroStation } from "./metro-station"
 
 type MetroStationType = {
   id: string
@@ -17,7 +20,7 @@ export function MetroStations({ metroStations = [] }: Props) {
     <Space wrap size={[8, 4]}>
       {metroStations.map((metro, index) => (
         <Text key={metro.id}>
-          <MetroStation name={metro.station} />
+          <MetroStation name={metro.station as MetroStationEnum} />
           {index < metroStations.length - 1 && <span>,</span>}
         </Text>
       ))}

@@ -1,9 +1,10 @@
 "use client"
 
-import { usePathname } from "next/navigation"
 import { clsx } from "clsx"
 import Link from "next/link"
-import { navItems } from "../../../lib/constsnts"
+import { usePathname } from "next/navigation"
+
+import { navItems } from "@/app/lib/constsnts"
 
 export function FooterLinks() {
   const pathname = usePathname()
@@ -15,7 +16,7 @@ export function FooterLinks() {
           <span
             className={clsx(
               "hover:text-primary transition text-muted-foreground",
-              href === pathname ? "text-primary" : ""
+              href === pathname ? "text-primary" : "",
             )}
           >
             {label}

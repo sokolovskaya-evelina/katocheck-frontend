@@ -1,4 +1,4 @@
-import {DistrictEnum, MetroStationEnum, RinkTypeEnum, RoleEnum} from "@/app/types/enums";
+import { DistrictEnum, MetroStationEnum, RinkTypeEnum, RoleEnum } from "@/app/types/enums"
 
 export function translateRole(role: RoleEnum) {
   return {

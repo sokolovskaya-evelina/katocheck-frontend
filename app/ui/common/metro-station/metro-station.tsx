@@ -1,8 +1,9 @@
-import { getMetroStationColor } from "@/app/lib/utils"
-import { MetroStationEnum } from "@/app/types/enums"
 import { Space } from "antd"
 import Text from "antd/es/typography/Text"
-import {translateMetroStation} from "@/app/lib/translations/admin/enum.translationts";
+
+import { translateMetroStation } from "@/app/lib/translations/admin/enum.translationts"
+import { getMetroStationColor } from "@/app/lib/utils"
+import { MetroStationEnum } from "@/app/types/enums"
 
 type Props = {
   name: MetroStationEnum

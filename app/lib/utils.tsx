@@ -1,6 +1,7 @@
-import { MetroStationEnum } from "../types/enums"
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
+
+import { MetroStationEnum } from "../types/enums"
 import { MetroStation } from "../ui/common/metro-station/metro-station"
 
 export function cn(...inputs: ClassValue[]) {
@@ -9,7 +10,7 @@ export function cn(...inputs: ClassValue[]) {
 
 export function getMetroStationColor(station: MetroStationEnum): string {
   switch (station) {
-      // Линия 1 — Кировско-Выборгская (красная)
+    // Линия 1 — Кировско-Выборгская (красная)
     case MetroStationEnum.Devyatkino:
     case MetroStationEnum.GrazhdanskiyProspekt:
     case MetroStationEnum.Akademichskaya:
@@ -31,7 +32,7 @@ export function getMetroStationColor(station: MetroStationEnum): string {
     case MetroStationEnum.ProspektVeteranov:
       return "bg-red-600"
 
-      // Линия 2 — Московско-Петроградская (синяя)
+    // Линия 2 — Московско-Петроградская (синяя)
     case MetroStationEnum.Parnas:
     case MetroStationEnum.ProspektProsveshcheniya:
     case MetroStationEnum.Ozerki:
@@ -52,7 +53,7 @@ export function getMetroStationColor(station: MetroStationEnum): string {
     case MetroStationEnum.Kupchino:
       return "bg-blue-600"
 
-      // Линия 3 — Невско-Василеостровская (зелёная)
+    // Линия 3 — Невско-Василеостровская (зелёная)
     case MetroStationEnum.Begovaya:
     case MetroStationEnum.Zenit:
     case MetroStationEnum.Primorskaya:
@@ -67,7 +68,7 @@ export function getMetroStationColor(station: MetroStationEnum): string {
     case MetroStationEnum.Rybatskoye:
       return "bg-green-600"
 
-      // Линия 4 — Правобережная (оранжевая)
+    // Линия 4 — Правобережная (оранжевая)
     case MetroStationEnum.GornyInstitut:
     case MetroStationEnum.Spasskaya:
     case MetroStationEnum.Dostoevskaya:
@@ -79,7 +80,7 @@ export function getMetroStationColor(station: MetroStationEnum): string {
     case MetroStationEnum.UlicaDybenko:
       return "bg-yellow-500"
 
-      // Линия 5 — Фрунзенско-Приморская (фиолетовая)
+    // Линия 5 — Фрунзенско-Приморская (фиолетовая)
     case MetroStationEnum.KomendantskiyProspekt:
     case MetroStationEnum.StarayaDerevnya:
     case MetroStationEnum.KrestovskiyOstrov:
@@ -123,7 +124,7 @@ export function getMetroStationOptions() {
       MetroStationEnum.KirovskiyZavod,
       MetroStationEnum.Avtovo,
       MetroStationEnum.LeninskiyProspekt,
-      MetroStationEnum.ProspektVeteranov
+      MetroStationEnum.ProspektVeteranov,
     ],
     "Московско-Петроградская": [
       MetroStationEnum.Parnas,
@@ -143,7 +144,7 @@ export function getMetroStationOptions() {
       MetroStationEnum.ParkPobedy,
       MetroStationEnum.Moskovskaya,
       MetroStationEnum.Zvezdnaya,
-      MetroStationEnum.Kupchino
+      MetroStationEnum.Kupchino,
     ],
     "Невско-Василеостровская": [
       MetroStationEnum.Begovaya,
@@ -157,7 +158,7 @@ export function getMetroStationOptions() {
       MetroStationEnum.Lomonosovskaya,
       MetroStationEnum.Proletarskaya,
       MetroStationEnum.Obukhovo,
-      MetroStationEnum.Rybatskoye
+      MetroStationEnum.Rybatskoye,
     ],
     "Правобережная": [
       MetroStationEnum.GornyInstitut,
@@ -168,7 +169,7 @@ export function getMetroStationOptions() {
       MetroStationEnum.Novocherkasskaya,
       MetroStationEnum.Ladozhskaya,
       MetroStationEnum.ProspektBolshevikov,
-      MetroStationEnum.UlicaDybenko
+      MetroStationEnum.UlicaDybenko,
     ],
     "Фрунзенско-Приморская": [
       MetroStationEnum.KomendantskiyProspekt,
@@ -185,8 +186,8 @@ export function getMetroStationOptions() {
       MetroStationEnum.Mezhdunarodnaya,
       MetroStationEnum.ProspektSlavy,
       MetroStationEnum.Dunaiskaya,
-      MetroStationEnum.Shushary
-    ]
+      MetroStationEnum.Shushary,
+    ],
   }
 
   return Object.entries(groupMap).map(([lineName, stations]) => ({
@@ -194,7 +195,7 @@ export function getMetroStationOptions() {
     title: lineName,
     options: stations.map(station => ({
       value: station,
-      label: <MetroStation name={station} indicatorPosition={"start"} />,
+      label: <MetroStation name={station} indicatorPosition="start" />,
     })),
   }))
 }

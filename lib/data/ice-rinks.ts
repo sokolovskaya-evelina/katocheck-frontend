@@ -80,7 +80,9 @@ export const getIceRinksShortInfo = async (params: {
   return data
 }
 
-export const getIceRinkInfoById = async (id: string) => {
+export const getIceRinkInfoById = async (
+  id: string,
+) => {
   return prisma.iceRink.findUnique({
     where: { id },
     include: {

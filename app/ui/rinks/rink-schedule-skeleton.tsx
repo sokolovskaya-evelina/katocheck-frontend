@@ -38,7 +38,7 @@ export function RinkScheduleSkeleton() {
 
       <Collapse
         bordered={false}
-        expandIconPlacement="end"
+        expandIconPosition="end"
         ghost
         size="small"
         items={Array.from({ length: 2 }).map((_, i) => ({

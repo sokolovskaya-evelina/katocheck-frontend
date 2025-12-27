@@ -2,7 +2,7 @@ import { Mail, Phone, Send } from "lucide-react"
 
 export function Contacts() {
   return (
-    <div className="max-w-screen-xl mx-auto flex flex-col md:flex-row justify-between gap-6 text-sm text-slate-800">
+    <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between gap-6 text-sm text-slate-800">
       <div>
         <h3 className="font-bold mb-2">КОНТАКТЫ</h3>
         <p className="flex items-center gap-2">
