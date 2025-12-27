@@ -11,7 +11,6 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 /**
@@ -22,15 +21,15 @@ datasource db {
 
 // Пользователь
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique // логин
+  id        String    @id @default(cuid())
+  email     String    @unique // логин
   username  String // отображаемое имя
   password  String
   role      UserRole
-  isActive  Boolean  @default(true)
-  sessions Session[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  isActive  Boolean   @default(true)
+  sessions  Session[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 
   // связь с катком (если этот пользователь — менеджер)
   iceRinkId String?
