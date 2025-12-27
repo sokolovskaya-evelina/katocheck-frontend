@@ -1,11 +1,12 @@
 "use client"
 
-import React from "react"
 import type { FormProps } from "antd"
 import { Button, Card, Form, Input } from "antd"
 import FormItem from "antd/es/form/FormItem"
 import Password from "antd/es/input/Password"
-import {signInUser} from "@/app/lib/actions/auth";
+import React from "react"
+
+import { signInUser } from "@/app/lib/actions/auth"
 
 type FieldType = {
   email?: string
@@ -13,7 +14,7 @@ type FieldType = {
 }
 
 const onFinish: FormProps<FieldType>["onFinish"] = async (values) => {
-   const res = await signInUser(values)
+  const res = await signInUser(values)
   console.log(res)
 }
 
