@@ -5,16 +5,28 @@ import DatePicker from "antd/es/date-picker"
 import Select from "antd/es/select"
 import TimePicker from "antd/es/time-picker"
 import Typography from "antd/es/typography"
+import { Dayjs } from "dayjs"
 import { ListFilter } from "lucide-react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useEffect, useMemo, useState } from "react"
 
+import { District, IceRinkType, MetroStation } from "@/app/generated/prisma/enums"
 import { districtOptions, rinkTypeOptions } from "@/app/lib/constsnts"
 import dayjs from "@/app/lib/dayjs"
 import { getMetroStationOptions } from "@/app/lib/utils"
 import { RinkTypeEnum } from "@/app/types/enums"
 
-const initialFilterState = {
+export type FilterState = {
+  dateRange: [Dayjs, Dayjs]
+  timeRange: [Dayjs, Dayjs]
+  rinkIds: string[]
+  metroIds: string[]
+  districts: string[]
+  sessionTypes: string[]
+  rinkType: IceRinkType | "ALL"
+}
+
+const initialFilterState: FilterState = {
   dateRange: [dayjs(), dayjs().endOf("week")],
   timeRange: [dayjs().startOf("day"), dayjs().endOf("day")],
   rinkIds: [],
@@ -29,7 +41,7 @@ type Props = {
   sessionTypes: { id: string; name: string }[]
 }
 
-function areFiltersEqual(a, b) {
+function areFiltersEqual(a: FilterState, b: FilterState) {
   return (
     dayjs(a.dateRange[0]).isSame(b.dateRange[0], "day") &&
     dayjs(a.dateRange[1]).isSame(b.dateRange[1], "day") &&
@@ -48,25 +60,45 @@ const ScheduleFilters = ({ rinks, sessionTypes }: Props) => {
   const router = useRouter()
   const [open, setOpen] = useState(false)
 
-  const [localFilters, setLocalFilters] = useState(initialFilterState)
-  const [draftFilters, setDraftFilters] = useState(initialFilterState)
+  const [localFilters, setLocalFilters] = useState<FilterState>(initialFilterState)
+  const [draftFilters, setDraftFilters] = useState<FilterState>(initialFilterState)
 
   useEffect(() => {
     const params = Object.fromEntries(searchParams.entries())
 
-    const updatedFilters = {
-      ...initialFilterState,
-      dateRange: params.startDate && params.endDate
-        ? [dayjs(params.startDate, "YYYY-MM-DD"), dayjs(params.endDate, "YYYY-MM-DD")]
-        : initialFilterState.dateRange,
-      timeRange: params.startTime && params.endTime
-        ? [dayjs(params.startTime, "HH:mm"), dayjs(params.endTime, "HH:mm")]
-        : initialFilterState.timeRange,
-      rinkIds: params.rinkIds ? params.rinkIds.split(",") : [],
-      metroIds: params.metroIds ? params.metroIds.split(",") : [],
-      districts: params.districts ? params.districts.split(",") : [],
-      sessionTypes: params.sessionTypes ? params.sessionTypes.split(",") : [],
-      rinkType: params.rinkType || RinkTypeEnum.All,
+    const metroIds: MetroStation[] =
+      params.metroIds
+        ?.split(",")
+        .filter((v): v is MetroStation =>
+          Object.values(MetroStation).includes(v as MetroStation),
+        ) ?? []
+
+    const districts: District[] =
+      params.districts
+        ?.split(",")
+        .filter((v): v is District => Object.values(District).includes(v as District)) ?? []
+
+    const rinkType =
+      params.rinkType === IceRinkType.INDOOR || params.rinkType === IceRinkType.OUTDOOR
+        ? params.rinkType
+        : RinkTypeEnum.All
+
+    const updatedFilters: FilterState = {
+      dateRange:
+        params.startDate && params.endDate
+          ? [dayjs(params.startDate, "YYYY-MM-DD"), dayjs(params.endDate, "YYYY-MM-DD")]
+          : initialFilterState.dateRange,
+
+      timeRange:
+        params.startTime && params.endTime
+          ? [dayjs(params.startTime, "HH:mm"), dayjs(params.endTime, "HH:mm")]
+          : initialFilterState.timeRange,
+
+      rinkIds: params.rinkIds?.split(",") ?? [],
+      metroIds,
+      districts,
+      sessionTypes: params.sessionTypes?.split(",") ?? [],
+      rinkType,
     }
 
     setLocalFilters(updatedFilters)
@@ -90,8 +122,8 @@ const ScheduleFilters = ({ rinks, sessionTypes }: Props) => {
     router.push("?" + p.toString())
   }
 
-  const rinkOptions = useMemo(() => rinks?.map(option => ({ value: option.id, label: option.name })), [rinks])
-  const sessionTypeOptions = useMemo(() => sessionTypes?.map(option => ({
+  const rinkOptions = useMemo(() => rinks.map(option => ({ value: option.id, label: option.name })), [rinks])
+  const sessionTypeOptions = useMemo(() => sessionTypes.map(option => ({
     value: option.id,
     label: option.name,
   })), [sessionTypes])
@@ -99,18 +131,27 @@ const ScheduleFilters = ({ rinks, sessionTypes }: Props) => {
   return (
     <div className="flex justify-end mt-2 mb-2">
       <div>
-        <Button type="primary" icon={<ListFilter />} onClick={() => {
-          setDraftFilters(localFilters)
-          setOpen(true)
-        }}>
+        <Button
+          type="primary"
+          icon={<ListFilter />}
+          onClick={() => {
+            setDraftFilters(localFilters)
+            setOpen(true)
+          }}
+        >
           Фильтры
         </Button>
       </div>
 
-      <Modal title="Фильтры" open={open} onCancel={() => {
-        setDraftFilters(localFilters)
-        setOpen(false)
-      }} footer={false}>
+      <Modal
+        title="Фильтры"
+        open={open}
+        onCancel={() => {
+          setDraftFilters(localFilters)
+          setOpen(false)
+        }}
+        footer={false}
+      >
         <Flex vertical gap={15} className="w-full">
           <Flex vertical className="flex-1">
             <Typography.Text>Дата</Typography.Text>
@@ -120,7 +161,16 @@ const ScheduleFilters = ({ rinks, sessionTypes }: Props) => {
               maxDate={dayjs().endOf("year")}
               allowClear={false}
               value={draftFilters.dateRange}
-              onChange={(val) => val && setDraftFilters(prev => ({ ...prev, dateRange: val }))}
+              onChange={val => {
+                if (!val || !val[0] || !val[1]) return
+
+                const nextRange: [Dayjs, Dayjs] = [val[0], val[1]]
+
+                setDraftFilters(prev => ({
+                  ...prev,
+                  dateRange: nextRange,
+                }))
+              }}
             />
           </Flex>
           <Flex vertical className="flex-1">
@@ -130,7 +180,16 @@ const ScheduleFilters = ({ rinks, sessionTypes }: Props) => {
               allowClear={false}
               needConfirm={false}
               value={draftFilters.timeRange}
-              onChange={(val) => val && setDraftFilters(prev => ({ ...prev, timeRange: val }))}
+              onChange={val => {
+                if (!val || !val[0] || !val[1]) return
+
+                const nextRange: [Dayjs, Dayjs] = [val[0], val[1]]
+
+                setDraftFilters(prev => ({
+                  ...prev,
+                  timeRange: nextRange,
+                }))
+              }}
             />
           </Flex>
           <Flex vertical className="flex-1">
@@ -141,7 +200,7 @@ const ScheduleFilters = ({ rinks, sessionTypes }: Props) => {
               maxTagCount="responsive"
               options={rinkOptions}
               value={draftFilters.rinkIds}
-              onChange={(val) => setDraftFilters(prev => ({ ...prev, rinkIds: val }))}
+              onChange={val => setDraftFilters(prev => ({ ...prev, rinkIds: val }))}
             />
           </Flex>
           <Flex vertical className="flex-1">
@@ -152,7 +211,7 @@ const ScheduleFilters = ({ rinks, sessionTypes }: Props) => {
               maxTagCount="responsive"
               options={getMetroStationOptions()}
               value={draftFilters.metroIds}
-              onChange={(val) => setDraftFilters(prev => ({ ...prev, metroIds: val }))}
+              onChange={val => setDraftFilters(prev => ({ ...prev, metroIds: val }))}
             />
           </Flex>
           <Flex vertical className="flex-1">
@@ -163,7 +222,7 @@ const ScheduleFilters = ({ rinks, sessionTypes }: Props) => {
               maxTagCount="responsive"
               options={districtOptions}
               value={draftFilters.districts}
-              onChange={(val) => setDraftFilters(prev => ({ ...prev, districts: val }))}
+              onChange={val => setDraftFilters(prev => ({ ...prev, districts: val }))}
             />
           </Flex>
           <Flex vertical className="flex-1">
@@ -174,7 +233,7 @@ const ScheduleFilters = ({ rinks, sessionTypes }: Props) => {
               maxTagCount="responsive"
               options={sessionTypeOptions}
               value={draftFilters.sessionTypes}
-              onChange={(val) => setDraftFilters(prev => ({ ...prev, sessionTypes: val }))}
+              onChange={val => setDraftFilters(prev => ({ ...prev, sessionTypes: val }))}
             />
           </Flex>
           <Flex vertical className="flex-1">
@@ -183,21 +242,29 @@ const ScheduleFilters = ({ rinks, sessionTypes }: Props) => {
               maxTagCount="responsive"
               options={rinkTypeOptions}
               value={draftFilters.rinkType}
-              onChange={(val) => setDraftFilters(prev => ({ ...prev, rinkType: val }))}
+              onChange={val => setDraftFilters(prev => ({ ...prev, rinkType: val }))}
             />
           </Flex>
           <Flex justify="space-between">
             <Button onClick={() => setDraftFilters(initialFilterState)}>Сбросить</Button>
             <Flex gap={15}>
-              <Button onClick={() => {
-                setDraftFilters(localFilters)
-                setOpen(false)
-              }}>Закрыть</Button>
-              <Button type="primary" disabled={areFiltersEqual(draftFilters, localFilters)} onClick={() => {
-                setLocalFilters(draftFilters)
-                updateParams()
-                setOpen(false)
-              }}>
+              <Button
+                onClick={() => {
+                  setDraftFilters(localFilters)
+                  setOpen(false)
+                }}
+              >
+                Закрыть
+              </Button>
+              <Button
+                type="primary"
+                disabled={areFiltersEqual(draftFilters, localFilters)}
+                onClick={() => {
+                  setLocalFilters(draftFilters)
+                  updateParams()
+                  setOpen(false)
+                }}
+              >
                 Применить
               </Button>
             </Flex>

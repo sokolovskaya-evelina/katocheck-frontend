@@ -1,8 +1,3 @@
-export enum FavoritesEnum {
-  All = "ALL",
-  Favorites = "FAVORITES",
-}
-
 export enum RoleEnum {
   Admin = "ADMIN",
   SuperAdmin = "SUPER_ADMIN",

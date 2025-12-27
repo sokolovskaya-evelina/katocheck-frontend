@@ -1,8 +1,9 @@
-import { Badge, Collapse, Flex, Button } from "antd"
+import { Badge, Button, Collapse, Flex } from "antd"
 import Text from "antd/es/typography/Text"
 import { CalendarIcon } from "lucide-react"
 import Link from "next/link"
 
+import { District, IceRinkType, MetroStation } from "@/app/generated/prisma/enums"
 import dayjs from "@/app/lib/dayjs"
 import { getScheduleGroupedByDay } from "@/lib/data/schedule"
 
@@ -16,29 +17,34 @@ export const Schedule = async ({ searchParams }: Props) => {
     endDate: typeof searchParams.endDate === "string" ? searchParams.endDate : undefined,
     startTime: typeof searchParams.startTime === "string" ? searchParams.startTime : undefined,
     endTime: typeof searchParams.endTime === "string" ? searchParams.endTime : undefined,
-    rinkType: typeof searchParams.rinkType === "string" ? searchParams.rinkType : undefined,
+    rinkType:
+      searchParams.rinkType === "INDOOR" || searchParams.rinkType === "OUTDOOR"
+        ? (searchParams.rinkType as IceRinkType)
+        : undefined,
     rinkIds: typeof searchParams.rinkIds === "string" ? searchParams.rinkIds.split(",") : undefined,
-    metroIds: typeof searchParams.metroIds === "string" ? searchParams.metroIds.split(",") : undefined,
-    districts: typeof searchParams.districts === "string" ? searchParams.districts.split(",") : undefined,
-    sessionTypes: typeof searchParams.sessionTypes === "string" ? searchParams.sessionTypes.split(",") : undefined,
+    metroIds:
+      typeof searchParams.metroIds === "string"
+        ? searchParams.metroIds
+          .split(",")
+          .filter((id): id is MetroStation =>
+            Object.values(MetroStation).includes(id as MetroStation),
+          )
+        : undefined,
+    districts:
+      typeof searchParams.districts === "string"
+        ? searchParams.districts
+          .split(",")
+          .filter((d): d is District => Object.values(District).includes(d as District))
+        : undefined,
+    sessionTypes:
+      typeof searchParams.sessionTypes === "string"
+        ? searchParams.sessionTypes.split(",")
+        : undefined,
   }
 
-  const scheduleData = await getScheduleGroupedByDay(parsed).catch(e => console.log(e))
+  const scheduleData = await getScheduleGroupedByDay(parsed)
 
-  if (Object.keys(searchParams).length > 0 && !scheduleData) {
-    return <Flex vertical align="center" className="text-center italic gap-4">
-      <span>⛸️ Сеансов не найдено. Попробуйте изменить фильтры! ⛸️</span>
-      <Link href="/">
-        <Button>Сбросить фильтры</Button>
-      </Link>
-    </Flex>
-  }
-
-  if (Object.keys(searchParams).length === 0 && !scheduleData) {
-    return <div className="text-center italic">Тут пока нет расписания, загляните позже 🥹</div>
-  }
-
-  const items = Object.entries(scheduleData).map(([date, items]) => ({
+  const itemsForCollapse = Object.entries(scheduleData).map(([date, items]) => ({
     key: date,
     label: (
       <Flex gap={15} align="center">
@@ -54,14 +60,14 @@ export const Schedule = async ({ searchParams }: Props) => {
             justify="space-between"
             align="start"
             gap={15}
-            className="rounded-lg border !p-2 bg-gray-50"
+            className="rounded-lg border p-2! bg-gray-50"
           >
             <Flex vertical>
               <Text ellipsis={{ tooltip: true }}>
                 <Link href={`/rinks/${item.iceRinkId}`}>{item.iceRink.name}</Link>
               </Text>
               {item.iceRink.metroStations?.length > 0 && (
-                <MetroStations metroStations={item.iceRink.metroStations.map((m) => m.station)} />
+                <MetroStations metroStations={item.iceRink.metroStations} />
               )}
             </Flex>
             <Flex align="start" gap={10}>
@@ -85,16 +91,27 @@ export const Schedule = async ({ searchParams }: Props) => {
 
   return (
     <div>
-      {items.length > 0 &&
+      {itemsForCollapse.length > 0 && (
         <Collapse
           defaultActiveKey={dayjs().startOf("day").toISOString()}
-          items={items}
+          items={itemsForCollapse}
           bordered={false}
           expandIconPosition="end"
           ghost
           className="grid xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-1 gap-4 items-start"
         />
-      }
+      )}
+      {Object.keys(searchParams).length > 0 && !itemsForCollapse.length && (
+        <Flex vertical align="center" className="text-center italic gap-4">
+          <span>⛸️ Сеансов не найдено. Попробуйте изменить фильтры! ⛸️</span>
+          <Link href="/">
+            <Button>Сбросить фильтры</Button>
+          </Link>
+        </Flex>
+      )}
+      {Object.keys(searchParams).length === 0 && !itemsForCollapse.length && (
+        <div className="text-center italic">Тут пока нет расписания, загляните позже 🥹</div>
+      )}
     </div>
   )
 }

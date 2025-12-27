@@ -1,99 +1,116 @@
-import prisma from "@/lib/prisma";
-import dayjs from "@/app/lib/dayjs";
-import {RinkTypeEnum} from "@/app/types/enums";
+import { District, MetroStation } from "@/app/generated/prisma/enums"
+import { ScheduleGetPayload } from "@/app/generated/prisma/models"
+import dayjs from "@/app/lib/dayjs"
+import { RinkTypeEnum } from "@/app/types/enums"
+import { RinkType } from "@/app/types/types"
+import { prisma } from "@/lib/prisma"
+
+type ScheduleWithRinkAndType = ScheduleGetPayload<{
+  include: {
+    iceRink: {
+      include: {
+        metroStations: true
+      }
+    }
+    sessionType: true
+  }
+}>
 
 export async function getScheduleGroupedByDay(params: {
-    startDate?: string
-    endDate?: string
-    startTime?: string
-    endTime?: string
-    rinkIds?: string[]
-    metroIds?: string[]
-    districts?: string[]
-    sessionTypes?: string[]
-    rinkType?: string
+  startDate?: string
+  endDate?: string
+  startTime?: string
+  endTime?: string
+  rinkIds?: string[]
+  metroIds?: MetroStation[]
+  districts?: District[]
+  sessionTypes?: string[]
+  rinkType?: RinkType
 }) {
-    const {
-        startDate,
-        endDate,
-        startTime,
-        endTime,
-        rinkIds,
-        metroIds,
-        districts,
-        sessionTypes,
-        rinkType,
-    } = params
+  const {
+    startDate,
+    endDate,
+    startTime,
+    endTime,
+    rinkIds,
+    metroIds,
+    districts,
+    sessionTypes,
+    rinkType,
+  } = params
 
-    const hasDate = startDate && endDate
-    const hasTime = startTime && endTime
-    const hasMetro = metroIds?.length
-    const hasRinks = rinkIds?.length
-    const hasSessionTypes = sessionTypes?.length
-    const hasDistrict = !!districts
-    const hasRinkType = rinkType && rinkType !== RinkTypeEnum.All
+  const hasDate = startDate && endDate
+  const hasTime = startTime && endTime
+  const hasMetro = metroIds?.length
+  const hasRinks = rinkIds?.length
+  const hasSessionTypes = sessionTypes?.length
+  const hasDistrict = !!districts
+  const hasRinkType = rinkType && rinkType !== RinkTypeEnum.All
 
-    const schedule = await prisma.schedule.findMany({
-        where: {
-            ...(hasDate && {
-                date: {
-                    gte: dayjs(startDate).startOf("day").toDate(),
-                    lte: dayjs(endDate).endOf("day").toDate(),
-                },
-            }),
-            ...(hasRinks && {
-                iceRinkId: { in: rinkIds },
-            }),
-            ...(hasSessionTypes && {
-                sessionTypeId: { in: sessionTypes },
-            }),
-            ...(hasDistrict && {
-                iceRink: {
-                    district: {in: districts},
-                },
-            }),
-            ...(hasRinkType && {
-                iceRink: {
-                    ...(hasDistrict ? { district: {in: districts} } : {}),
-                    type: rinkType,
-                },
-            }),
+  const schedule = await prisma.schedule.findMany({
+    where: {
+      ...(hasDate && {
+        date: {
+          gte: dayjs(startDate).startOf("day").toDate(),
+          lte: dayjs(endDate).endOf("day").toDate(),
         },
-        include: {
-            iceRink: {
-                include: { metroStations: true },
-            },
-            sessionType: true,
+      }),
+      ...(hasRinks && {
+        iceRinkId: { in: rinkIds },
+      }),
+      ...(hasSessionTypes && {
+        sessionTypeId: { in: sessionTypes },
+      }),
+      ...(hasDistrict && {
+        iceRink: {
+          district: { in: districts },
         },
-        orderBy: { startTime: "asc" },
+      }),
+      ...(hasRinkType && {
+        iceRink: {
+          ...(hasDistrict ? { district: { in: districts } } : {}),
+          type: rinkType,
+        },
+      }),
+    },
+    include: {
+      iceRink: {
+        include: { metroStations: true },
+      },
+      sessionType: true,
+    },
+    orderBy: { startTime: "asc" },
+  })
+
+  let filtered = hasTime
+    ? schedule.filter(item => {
+      const hour = dayjs(item.startTime).format("HH:mm")
+      return (
+        dayjs(hour, "HH:mm").isSameOrAfter(dayjs(startTime, "HH:mm")) &&
+        dayjs(hour, "HH:mm").isSameOrBefore(dayjs(endTime, "HH:mm"))
+      )
     })
+    : schedule
 
-    let filtered = hasTime
-        ? schedule.filter((item) => {
-            const hour = dayjs(item.startTime).format("HH:mm")
-            return (
-                dayjs(hour, "HH:mm").isSameOrAfter(dayjs(startTime, "HH:mm")) &&
-                dayjs(hour, "HH:mm").isSameOrBefore(dayjs(endTime, "HH:mm"))
-            )
-        })
-        : schedule
+  if (hasMetro) {
+    filtered = filtered.filter(item =>
+      item.iceRink.metroStations.some(ms => metroIds.includes(ms.station)),
+    )
+  }
 
-    if (hasMetro) {
-        filtered = filtered.filter((item) =>
-            item.iceRink.metroStations.some((ms) => metroIds.includes(ms.station))
-        )
-    }
-
-    return filtered.reduce((acc, item) => {
-        const dateKey = dayjs(item.date).format("YYYY-MM-DD")
-        if (!acc[dateKey]) acc[dateKey] = []
-        acc[dateKey].push(item)
-        return acc
-    }, {} as Record<string, typeof filtered>)
+  return filtered.reduce(
+    (acc, item) => {
+      const dateKey = dayjs(item.date).format("YYYY-MM-DD")
+      if (!acc[dateKey]) acc[dateKey] = []
+      acc[dateKey].push(item)
+      return acc
+    },
+    {} as Record<string, ScheduleWithRinkAndType[]>,
+  )
 }
 
 export const getAllSessionTypes = async () => {
-    return prisma.sessionType.findMany({
-        orderBy: { name: "asc" },
-    })
+  return prisma.sessionType.findMany({
+    orderBy: { name: "asc" },
+  })
 }

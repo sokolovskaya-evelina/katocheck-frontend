@@ -9,8 +9,8 @@ type Props = { searchParams: Record<string, string | string[]> }
 
 export default async function Page({ searchParams }: Props) {
   const params = await searchParams
-  const rinks = await getIceRinksForOptions().catch(e => console.log(e))
-  const sessionTypes = await getAllSessionTypes().catch(e => console.log(e))
+  const rinks = await getIceRinksForOptions()
+  const sessionTypes = await getAllSessionTypes()
 
   return (
     <Flex vertical gap={15}>
