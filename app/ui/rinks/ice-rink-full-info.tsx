@@ -4,10 +4,12 @@ import Text from "antd/es/typography/Text"
 import Title from "antd/es/typography/Title"
 import { Map, MapPin, Phone, Train } from "lucide-react"
 import Image from "next/image"
+import { notFound } from "next/navigation"
 import { FaFacebook, FaGlobe, FaInstagram, FaTelegramPlane, FaVk } from "react-icons/fa"
 import { IoMailOutline } from "react-icons/io5"
 
 import { translateDistrict } from "@/app/lib/translations/admin/enum.translationts"
+import { DistrictEnum } from "@/app/types/enums"
 import { getIceRinkInfoById } from "@/lib/data/ice-rinks"
 
 import { MetroStations } from "../common/metro-station/metro-stations"
@@ -30,7 +32,9 @@ const getSocialIcon = (name: string) => {
 type Props = { id: string }
 
 export default async function IceRinkFullInfo({ id }: Props) {
-  const rink = await getIceRinkInfoById(id).catch(e => console.log(e))
+  const rink = await getIceRinkInfoById(id)
+
+  if (!rink) return notFound()
 
   return (
     <Card
@@ -57,7 +61,7 @@ export default async function IceRinkFullInfo({ id }: Props) {
           {rink.district && (
             <Space size="small" align="center">
               <Map className="w-4 h-4 stroke-slate-500" />
-              <Text>{translateDistrict(rink.district)} район</Text>
+              <Text>{translateDistrict(rink.district as DistrictEnum)} район</Text>
             </Space>
           )}
 
@@ -107,7 +111,7 @@ export default async function IceRinkFullInfo({ id }: Props) {
           )}
           {rink.email && <span className="flex items-center gap-1">
                         <IoMailOutline className="w-4 h-4 fill-slate-500" />
-                        <TextLink target="_blank" rel="noopener noreferrer" href={rink.website}>{rink.email}</TextLink>
+                        <TextLink target="_blank" rel="noopener noreferrer" href={rink.email}>{rink.email}</TextLink>
                     </span>}
         </Flex>
       </div>

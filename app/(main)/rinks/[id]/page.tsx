@@ -1,4 +1,5 @@
 import { Flex } from "antd"
+import { notFound } from "next/navigation"
 import { Suspense } from "react"
 
 import IceRinkFullInfo from "@/app/ui/rinks/ice-rink-full-info"
@@ -16,7 +17,9 @@ export default async function Page(props: {
   const params = await props.params
   const searchParams = await props.searchParams
 
-  const rink = await getIceRinkInfoById(params.id).catch(e => console.log(e))
+  const rink = await getIceRinkInfoById(params.id)
+
+  if (!rink) return notFound()
 
   return (
     <Flex vertical gap={32}>
@@ -31,11 +34,13 @@ export default async function Page(props: {
           </Suspense>
         </div>
 
-        <div className="flex-[1_1_100%] lg:flex-[1_1_48%] min-w-[300px]">
-          <Suspense fallback={<MapSkeleton />}>
-            <Map location={[+rink.longitude, +rink.latitude]} />
-          </Suspense>
-        </div>
+        {rink.longitude && rink.latitude && (
+          <div className="flex-[1_1_100%] lg:flex-[1_1_48%] min-w-[300px]">
+            <Suspense fallback={<MapSkeleton />}>
+              <Map location={[rink.longitude, rink.latitude]} />
+            </Suspense>
+          </div>
+        )}
       </Flex>
     </Flex>
   )
